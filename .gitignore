@@ -1,0 +1,48 @@
+# VS
+.vs/
+
+# User specific files
+*.user
+
+# QtCreator
+*.autosave
+
+# QMake
+MakeFile
+MakeFile.*
+
+# Temp/Output build results
+**/.obj/
+**/.moc/
+**/.qrc/
+**/.ui/
+cache
+output/
+x64/
+Win32/
+[Dd]ebug/
+[Rr]elease/
+
+# RBR MP output
+rbr-media-player.exe
+rbr-media-player.ilk
+
+# General output
+*.pdb
+*.prl
+*.ilk
+*.exp
+*.rc
+
+# OS detritus
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Doxygen
+documentation
+
+# Clang Format
+*.TMP
