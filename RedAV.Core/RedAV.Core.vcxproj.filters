@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Encoding">
+      <UniqueIdentifier>{82148638-21b3-4cba-a617-9699abea165e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Enumerators">
+      <UniqueIdentifier>{b7d04c67-06f4-494b-83f7-68fb80fd24a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Media">
+      <UniqueIdentifier>{eecb0d11-171b-4770-951d-30f143490d81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Muxing">
+      <UniqueIdentifier>{6d77ba3d-baae-4c22-bceb-06c28f54092a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Encoding">
+      <UniqueIdentifier>{921c8fa7-35e8-43fb-90a2-f32f550771c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Media">
+      <UniqueIdentifier>{84cafde1-654c-48cc-bd6c-610189e7b360}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Muxing">
+      <UniqueIdentifier>{6d479b0e-07d8-45c0-a845-a8fab7df7aca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Enumerators">
+      <UniqueIdentifier>{fbac31a7-0cb4-4361-a2bb-9018c228bda4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\encoding\Decoder.h">
+      <Filter>Header Files\Encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enumerators\AudioCodec.h">
+      <Filter>Header Files\Enumerators</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enumerators\MediaType.h">
+      <Filter>Header Files\Enumerators</Filter>
+    </ClInclude>
+    <ClInclude Include="source\media\Stream.h">
+      <Filter>Header Files\Media</Filter>
+    </ClInclude>
+    <ClInclude Include="source\muxing\Demuxer.h">
+      <Filter>Header Files\Muxing</Filter>
+    </ClInclude>
+    <ClInclude Include="source\muxing\Muxer.h">
+      <Filter>Header Files\Muxing</Filter>
+    </ClInclude>
+    <ClInclude Include="source\media\Packet.h">
+      <Filter>Header Files\Media</Filter>
+    </ClInclude>
+    <ClInclude Include="source\media\Frame.h">
+      <Filter>Header Files\Media</Filter>
+    </ClInclude>
+    <ClInclude Include="source\encoding\Encoder.h">
+      <Filter>Header Files\Encoding</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\encoding\Decoder.cpp">
+      <Filter>Source Files\Encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="source\media\Stream.cpp">
+      <Filter>Source Files\Media</Filter>
+    </ClCompile>
+    <ClCompile Include="source\muxing\Demuxer.cpp">
+      <Filter>Source Files\Muxing</Filter>
+    </ClCompile>
+    <ClCompile Include="source\muxing\Muxer.cpp">
+      <Filter>Source Files\Muxing</Filter>
+    </ClCompile>
+    <ClCompile Include="source\media\Packet.cpp">
+      <Filter>Source Files\Media</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enumerators\AudioCodec.cpp">
+      <Filter>Source Files\Enumerators</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enumerators\MediaType.cpp">
+      <Filter>Source Files\Enumerators</Filter>
+    </ClCompile>
+    <ClCompile Include="source\media\Frame.cpp">
+      <Filter>Source Files\Media</Filter>
+    </ClCompile>
+    <ClCompile Include="source\encoding\Encoder.cpp">
+      <Filter>Source Files\Encoding</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

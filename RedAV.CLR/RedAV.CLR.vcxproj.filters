@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Media">
+      <UniqueIdentifier>{36dfd13f-3d31-4db5-a516-7dbf03fe9a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Media">
+      <UniqueIdentifier>{b83f570a-5418-4710-9ddc-35608b474f33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Muxing">
+      <UniqueIdentifier>{6da05d09-60d7-44ec-aa77-c354cc3a5b6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Muxing">
+      <UniqueIdentifier>{e5fd80c2-5eb7-4ea4-9526-635474884f86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{737ea13b-42d3-4d4d-8fab-a80ee2c62183}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{5200d54f-bf04-4dee-a065-95ff089950c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Enumerators">
+      <UniqueIdentifier>{ca1a9be5-db6d-4ca4-b44f-98ab22e6b774}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\media\StreamWrapper.h">
+      <Filter>Header Files\Media</Filter>
+    </ClInclude>
+    <ClInclude Include="source\muxing\DemuxerWrapper.h">
+      <Filter>Header Files\Muxing</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utilities\TypeHelper.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\media\PacketWrapper.h">
+      <Filter>Header Files\Media</Filter>
+    </ClInclude>
+    <ClInclude Include="source\muxing\MuxerWrapper.h">
+      <Filter>Header Files\Muxing</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enumerators\AudioCodecWrapper.h">
+      <Filter>Header Files\Enumerators</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enumerators\MediaTypeWrapper.h">
+      <Filter>Header Files\Enumerators</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\media\StreamWrapper.cpp">
+      <Filter>Source Files\Media</Filter>
+    </ClCompile>
+    <ClCompile Include="source\muxing\DemuxerWrapper.cpp">
+      <Filter>Source Files\Muxing</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utilities\TypeHelper.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\media\PacketWrapper.cpp">
+      <Filter>Source Files\Media</Filter>
+    </ClCompile>
+    <ClCompile Include="source\muxing\MuxerWrapper.cpp">
+      <Filter>Source Files\Muxing</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
