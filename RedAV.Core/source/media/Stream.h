@@ -12,7 +12,7 @@ namespace redav
 		class Stream
 		{
 		public:
-			Stream(AVStream* stream);
+			Stream(AVStream* stream = nullptr);
 
 			enumerators::AudioCodec GetAudioCodec() const;
 			enumerators::MediaType GetMediaType() const;

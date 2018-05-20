@@ -8,6 +8,7 @@
 
 struct AVCodec;
 struct AVCodecContext;
+struct AVStream;
 
 namespace redav
 {
@@ -16,17 +17,20 @@ namespace redav
 		class Decoder
 		{
 		public:
-			explicit Decoder(enumerators::AudioCodec audioCodec);
+			Decoder();
 			~Decoder();
 
 			void DecodePacket(media::Packet* packet, const std::function<void(media::Frame*)>& frameCompleteDelegate);
-			void Open();
+			void Open(AVStream* stream);
+			void Open(enumerators::AudioCodec audioCodec);
 
 		private:
-			enumerators::AudioCodec audioCodec_;
 			AVCodec* codec_{ nullptr };
 			AVCodecContext* codecContext_{ nullptr };
 			AVFrame* decodedFrame_{ nullptr };
+
+			void SetCodecAndContext(AVCodecID codecID);
+
 		};
 	}
 }

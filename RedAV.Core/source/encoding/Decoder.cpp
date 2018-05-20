@@ -3,15 +3,15 @@
 extern "C"
 {
 #include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
 }
 
 using namespace redav::encoding;
 using namespace redav::enumerators;
 using namespace redav::media;
 
-Decoder::Decoder(AudioCodec audioCodec)
+Decoder::Decoder()
 {
-	audioCodec_ = audioCodec;
 }
 
 Decoder::~Decoder()
@@ -66,15 +66,29 @@ void Decoder::DecodePacket(Packet* packet, const std::function<void(Frame*)>& fr
 	}
 }
 
-void Decoder::Open()
+void Decoder::Open(AudioCodec audioCodec)
 {
-	codec_ = codec_ == nullptr ? avcodec_find_decoder(AudioCodecMapper::ToFfmpeg(audioCodec_)) : codec_;
+	SetCodecAndContext(AudioCodecMapper::ToFfmpeg(audioCodec));
+
+	if (avcodec_open2(codecContext_, codec_, nullptr) < 0) throw std::exception("Decoder error: Failed to open codec");
+}
+
+void Decoder::Open(AVStream* stream)
+{
+	SetCodecAndContext(stream->codecpar->codec_id);
+
+	if (avcodec_parameters_to_context(codecContext_, stream->codecpar) < 0) throw std::exception("Decoder error: Failed to copy parameters to context");
+
+	if (avcodec_open2(codecContext_, codec_, nullptr) < 0) throw std::exception("Decoder error: Failed to open codec");
+}
+
+void Decoder::SetCodecAndContext(AVCodecID codecID)
+{
+	codec_ = codec_ == nullptr ? avcodec_find_decoder(codecID) : codec_;
 
 	if (codec_ == nullptr) throw std::exception("Decoder error: Decoder not found");
 
 	codecContext_ = codecContext_ == nullptr ? avcodec_alloc_context3(codec_) : codecContext_;
 
 	if (codecContext_ == nullptr) throw std::exception("Decoder error: Failed to create codec context");
-
-	if (avcodec_open2(codecContext_, codec_, nullptr) < 0) throw std::exception("Decoder error: Failed to open codec");
 }
