@@ -5,9 +5,8 @@ extern "C"
 #include <libavformat/avformat.h>
 }
 
-#include <iostream>
-
 using namespace redav::encoding;
+using namespace redav::enumerators;
 using namespace redav::media;
 using namespace redav::muxing;
 
@@ -25,24 +24,22 @@ void Demuxer::Open(const std::string& filePath)
 		streams_[i] = formatContext_->streams[i];
 	}
 
-	auto audioStreamIndex = av_find_best_stream(formatContext_, AVMediaType::AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
-	
+	const auto audioStreamIndex = av_find_best_stream(formatContext_, AVMediaType::AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
+
 	if (audioStreamIndex >= 0)
 	{
-		audioDecoder_ = std::make_unique<Decoder>();
-		audioDecoder_->Open(formatContext_->streams[audioStreamIndex]);
+		audioDecoder_.Open(formatContext_->streams[audioStreamIndex]);
 	}
 
-	auto videoStreamIndex = av_find_best_stream(formatContext_, AVMediaType::AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
+	const auto videoStreamIndex = av_find_best_stream(formatContext_, AVMediaType::AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
 
 	if (videoStreamIndex >= 0)
 	{
-		videoDecoder_ = std::make_unique<Decoder>();
-		videoDecoder_->Open(formatContext_->streams[videoStreamIndex]);
+		videoDecoder_.Open(formatContext_->streams[videoStreamIndex]);
 	}
 }
 
-void Demuxer::DecodePackets(const std::function<void(Frame*)>& frameDecodedFunc) const
+void Demuxer::DecodePackets(const std::function<void(Frame*)>& frameDecodedFunc)
 {
 	AVPacket avPacket;
 	Packet packet(&avPacket);
@@ -51,11 +48,13 @@ void Demuxer::DecodePackets(const std::function<void(Frame*)>& frameDecodedFunc)
 	{
 		switch (formatContext_->streams[packet.GetPacket()->stream_index]->codecpar->codec_type)
 		{
-		case AVMediaType::AVMEDIA_TYPE_AUDIO:
-			audioDecoder_->DecodePacket(&packet, [&frameDecodedFunc](Frame* frame) { frameDecodedFunc(frame); });
+		case AVMEDIA_TYPE_AUDIO:
+			audioDecoder_.DecodePacket(&packet, [&frameDecodedFunc](Frame* frame) { frameDecodedFunc(frame); });
 			break;
-		case AVMediaType::AVMEDIA_TYPE_VIDEO:
-			videoDecoder_->DecodePacket(&packet, [&frameDecodedFunc](Frame* frame) { frameDecodedFunc(frame); });
+		case AVMEDIA_TYPE_VIDEO:
+			videoDecoder_.DecodePacket(&packet, [&frameDecodedFunc](Frame* frame) { frameDecodedFunc(frame); });
+			break;
+		default:
 			break;
 		}
 	}
@@ -72,14 +71,4 @@ void Demuxer::Close()
 const std::map<int, Stream>& Demuxer::GetStreams() const
 {
 	return streams_;
-}
-
-Decoder* Demuxer::GetAudioDecoder() const
-{
-	return audioDecoder_.get();
-}
-
-Decoder* Demuxer::GetVideoDecoder() const
-{
-	return videoDecoder_.get();
 }

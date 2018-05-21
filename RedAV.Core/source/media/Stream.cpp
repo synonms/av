@@ -18,7 +18,7 @@ MediaType Stream::GetMediaType() const
 	return MediaTypeMapper::FromFfmpeg(stream_->codecpar->codec_type);
 }
 
-AudioCodec Stream::GetAudioCodec() const
+CodecType Stream::GetAudioCodec() const
 {
-	return AudioCodecMapper::FromFfmpeg(stream_->codecpar->codec_id);
+	return CodecTypeMapper::FromFfmpeg(stream_->codecpar->codec_id);
 }

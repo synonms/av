@@ -9,6 +9,7 @@ extern "C"
 using namespace redav::encoding;
 using namespace redav::enumerators;
 using namespace redav::media;
+using namespace redav::utilities;
 
 Decoder::Decoder()
 {
@@ -44,31 +45,23 @@ void Decoder::DecodePacket(Packet* packet, const std::function<void(Frame*)>& fr
 		if (decodeResult == AVERROR(EAGAIN)) break; // Output is not available in this state
 		if (decodeResult == AVERROR_EOF) break; // Decoder has been fully flushed and there will be no more
 
-		if (decodeResult == AVERROR(EINVAL)) throw std::exception("Decoder error: Codec not opened");
+		if (decodeResult == AVERROR(EINVAL)) throw std::exception("Decoder error: CodecType not opened");
 		if (decodeResult < 0) throw std::exception("Decoder error: Failed to receive frame");
 
-		Frame frame(decodedFrame_);
+		Frame frame(decodedFrame_, MediaTypeMapper::FromFfmpeg(codecContext_->codec_type), RationalNumber(codecContext_->time_base.num, codecContext_->time_base.den));
 
 		frameCompleteDelegate(&frame);
-
-		// const auto dataSize = av_get_bytes_per_sample(codecContext_->sample_fmt);
-  //
-		// if (dataSize < 0) throw std::exception("Decoder error: Failed to calculate data size");
-  //
-		// for (auto i = 0; i < decodedFrame_->nb_samples; i++)
-		// {
-		// 	for (auto ch = 0; ch < codecContext_->channels; ch++)
-		// 	{
-		// 		const auto dataStart = decodedFrame_->data[ch] + dataSize * i;
-		// 		std::copy(dataStart, dataStart + dataSize, std::back_inserter(results));
-		// 	}
-		// }
 	}
 }
 
-void Decoder::Open(AudioCodec audioCodec)
+AVRational Decoder::GetTimeBase() const
 {
-	SetCodecAndContext(AudioCodecMapper::ToFfmpeg(audioCodec));
+	return codecContext_->time_base;
+}
+
+void Decoder::Open(CodecType audioCodec)
+{
+	SetCodecAndContext(CodecTypeMapper::ToFfmpeg(audioCodec));
 
 	if (avcodec_open2(codecContext_, codec_, nullptr) < 0) throw std::exception("Decoder error: Failed to open codec");
 }

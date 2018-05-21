@@ -8,7 +8,7 @@ namespace redav
 {
 	namespace enumerators
 	{
-		enum class AudioCodec : int
+		enum class CodecType : int
 		{
 			Unknown = 0,
 			PCM_Signed16BitLittleEndian = 65536,
@@ -39,15 +39,15 @@ namespace redav
 			Opus = 86076
 		};
 
-		class AudioCodecMapper
+		class CodecTypeMapper
 		{
 		public:
-			static AudioCodec FromFfmpeg(AVCodecID value);
-			static AVCodecID ToFfmpeg(AudioCodec value);
-			static std::string ToString(AudioCodec value);
+			static CodecType FromFfmpeg(AVCodecID value);
+			static AVCodecID ToFfmpeg(CodecType value);
+			static std::string ToString(CodecType value);
 
 		private:
-			AudioCodecMapper() = default;
+			CodecTypeMapper() = default;
 		};
 	}
 }

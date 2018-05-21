@@ -2,12 +2,13 @@
 
 #include <functional>
 
-#include <enumerators/AudioCodec.h>
+#include <enumerators/CodecType.h>
 #include <media/Frame.h>
 #include <media/Packet.h>
 
 struct AVCodec;
 struct AVCodecContext;
+struct AVRational;
 struct AVStream;
 
 namespace redav
@@ -21,8 +22,9 @@ namespace redav
 			~Decoder();
 
 			void DecodePacket(media::Packet* packet, const std::function<void(media::Frame*)>& frameCompleteDelegate);
+			AVRational GetTimeBase() const;
 			void Open(AVStream* stream);
-			void Open(enumerators::AudioCodec audioCodec);
+			void Open(enumerators::CodecType audioCodec);
 
 		private:
 			AVCodec* codec_{ nullptr };

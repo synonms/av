@@ -3,6 +3,9 @@
 extern "C"
 {
 #include <libavformat/avformat.h>
+#include <libavcodec/avcodec.h>
+#include <libswscale/swscale.h>
+#include <libavutil/opt.h>
 }
 
 #include <exception>
@@ -11,8 +14,9 @@ extern "C"
 using namespace redav::enumerators;
 using namespace redav::media;
 using namespace redav::muxing;
+using namespace redav::utilities;
 
-void Muxer::Open(const std::string& filePath, AudioCodec audioCodecType, bool isInterleaved)
+void Muxer::Open(const std::string& filePath, CodecType audioCodecType, bool isInterleaved)
 {
 #define AVIO_FLAG_WRITE 2
 
@@ -20,36 +24,33 @@ void Muxer::Open(const std::string& filePath, AudioCodec audioCodecType, bool is
 	isInterleaved_ = isInterleaved;
 	streams_.clear();
 
-	const auto outputFormat = av_guess_format(nullptr, filePath.c_str(), nullptr);
+	avformat_alloc_output_context2(&formatContext_, nullptr, nullptr, filePath.c_str());
+
+	if (formatContext_ == nullptr)
+	{
+		// Could not deduce output format from file extension - default to mpeg
+		avformat_alloc_output_context2(&formatContext_, nullptr, "mpeg", filePath.c_str());
+	}
+	
+	if (formatContext_ == nullptr) throw std::exception("Muxer error: Failed to create format context");
+
+	const auto outputFormat = formatContext_->oformat;
 
 	if (outputFormat == nullptr) throw std::exception("Muxer error: Failed to determine output format");
 
-	formatContext_ = avformat_alloc_context();
+	if (outputFormat->video_codec != AV_CODEC_ID_NONE)
+	{
+		videoStream_ = CreateStream(outputFormat->video_codec);
+		videoEncoder_.Open(formatContext_, videoStream_, CodecTypeMapper::FromFfmpeg(outputFormat->video_codec), nullptr);
+	}
 
-	if (formatContext_ == nullptr) throw std::exception("Muxer error: Failed to create format context");
+	if (outputFormat->audio_codec != AV_CODEC_ID_NONE)
+	{
+		audioStream_ = CreateStream(outputFormat->audio_codec);
+		audioEncoder_.Open(formatContext_, audioStream_, CodecTypeMapper::FromFfmpeg(outputFormat->audio_codec), nullptr);
+	}
 
-	formatContext_->oformat = outputFormat;
-
-	const auto audioCodec = avcodec_find_decoder(AudioCodecMapper::ToFfmpeg(audioCodecType));
-
-	if (audioCodec == nullptr) throw std::exception("Muxer error: Failed to find decoder");
-
-	auto audioStream = avformat_new_stream(formatContext_, audioCodec);
-
-	if (audioStream == nullptr) throw std::exception("Muxer error: Failed to create audio stream");
-
-	streams_.emplace_back(audioStream);
-
-	audioStream->codecpar->codec_id = AudioCodecMapper::ToFfmpeg(audioCodecType);
-	audioStream->codecpar->codec_type = AVMEDIA_TYPE_AUDIO;
-	audioStream->codecpar->codec_tag = 0;
-	audioStream->codecpar->sample_rate = 48000;
-	// audioStream_->pts = m_in_aud_strm->pts;
-	// audioStream_->duration = m_in_aud_strm->duration;
-	// audioStream_->time_base.num = m_in_aud_strm->time_base.num;
-	// audioStream_->time_base.den = m_in_aud_strm->time_base.den;
-
-	if (avio_open2(&formatContext_->pb, filePath.c_str(), AVIO_FLAG_WRITE, nullptr, nullptr) < 0) throw new std::exception("Muxer error: Unable to open output file");
+	if (avio_open2(&formatContext_->pb, filePath.c_str(), AVIO_FLAG_WRITE, nullptr, nullptr) < 0) throw std::exception("Muxer error: Unable to open output file");
 
 	if (avformat_write_header(formatContext_, nullptr) < 0) throw std::exception("Muxer error: Failed to write header");
 }
@@ -76,14 +77,54 @@ void Muxer::WriteBytes(const std::vector<uint8_t>& data) const
 	if (fileStream.is_open()) fileStream.close();
 }
 
-void Muxer::WritePacket(Packet* packet) const
+void Muxer::WriteFrame(Frame* frame)
 {
+	switch(frame->GetMediaType())
+	{
+	case MediaType::Audio:
+		audioEncoder_.EncodeFrame(frame, [=](Packet* packet)
+		{
+			if (WritePacket(frame->GetTimeBase(), audioStream_, packet->GetPacket()) < 0) throw std::exception("Muxer: Error writing audio packet");
+		});
+		break;
+	case MediaType::Video:
+		videoEncoder_.EncodeFrame(frame, [=](Packet* packet)
+		{
+			if (WritePacket(frame->GetTimeBase(), videoStream_, packet->GetPacket()) < 0) throw std::exception("Muxer: Error writing video packet");
+		});
+		break;
+	default:
+		break;
+	}
+}
+
+
+
+AVStream* Muxer::CreateStream(AVCodecID codecId) const
+{
+	const auto stream = avformat_new_stream(formatContext_, nullptr);
+
+	if (stream == nullptr) throw std::exception("Could not allocate stream");
+
+	stream->id = formatContext_->nb_streams - 1;
+
+	return stream;
+}
+
+
+
+int Muxer::WritePacket(const RationalNumber& timeBase, AVStream* stream, AVPacket* packet) const
+{
+	// Rescale output packet timestamp values from codec to stream timebase 
+	av_packet_rescale_ts(packet, AVRational{ timeBase.numerator, timeBase.denominator }, stream->time_base);
+
+	packet->stream_index = stream->index;
+
+	// Write the compressed frame to the media file
 	if (isInterleaved_)
 	{
-		av_interleaved_write_frame(formatContext_, packet->GetPacket());
+		return av_interleaved_write_frame(formatContext_, packet);
 	}
-	else
-	{
-		av_write_frame(formatContext_, packet->GetPacket());
-	}
+
+	return av_write_frame(formatContext_, packet);
 }

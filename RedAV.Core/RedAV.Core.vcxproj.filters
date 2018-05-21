@@ -37,13 +37,13 @@
     <Filter Include="Source Files\Enumerators">
       <UniqueIdentifier>{fbac31a7-0cb4-4361-a2bb-9018c228bda4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{92039c98-1fc1-4a9a-a0e6-8819bcb5e94e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\encoding\Decoder.h">
       <Filter>Header Files\Encoding</Filter>
-    </ClInclude>
-    <ClInclude Include="source\enumerators\AudioCodec.h">
-      <Filter>Header Files\Enumerators</Filter>
     </ClInclude>
     <ClInclude Include="source\enumerators\MediaType.h">
       <Filter>Header Files\Enumerators</Filter>
@@ -66,6 +66,12 @@
     <ClInclude Include="source\encoding\Encoder.h">
       <Filter>Header Files\Encoding</Filter>
     </ClInclude>
+    <ClInclude Include="source\enumerators\CodecType.h">
+      <Filter>Header Files\Enumerators</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utilities\RationalNumber.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\encoding\Decoder.cpp">
@@ -83,9 +89,6 @@
     <ClCompile Include="source\media\Packet.cpp">
       <Filter>Source Files\Media</Filter>
     </ClCompile>
-    <ClCompile Include="source\enumerators\AudioCodec.cpp">
-      <Filter>Source Files\Enumerators</Filter>
-    </ClCompile>
     <ClCompile Include="source\enumerators\MediaType.cpp">
       <Filter>Source Files\Enumerators</Filter>
     </ClCompile>
@@ -94,6 +97,9 @@
     </ClCompile>
     <ClCompile Include="source\encoding\Encoder.cpp">
       <Filter>Source Files\Encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enumerators\CodecType.cpp">
+      <Filter>Source Files\Enumerators</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

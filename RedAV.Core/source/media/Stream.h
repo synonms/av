@@ -1,6 +1,6 @@
 #pragma once
 
-#include <enumerators/AudioCodec.h>
+#include <enumerators/CodecType.h>
 #include <enumerators/MediaType.h>
 
 struct AVStream;
@@ -14,7 +14,7 @@ namespace redav
 		public:
 			Stream(AVStream* stream = nullptr);
 
-			enumerators::AudioCodec GetAudioCodec() const;
+			enumerators::CodecType GetAudioCodec() const;
 			enumerators::MediaType GetMediaType() const;
 
 		private:
