@@ -6,19 +6,31 @@ extern "C"
 #include <libavformat/avformat.h>
 }
 
+#include <iostream>
+
 using namespace redav::encoding;
 using namespace redav::enumerators;
 using namespace redav::media;
 using namespace redav::utilities;
 
+class Decoder::Implementation 
+{
+public:
+	Implementation()
+	{
+	}
+
+	Codec codec;
+	Frame decodedFrame;
+};
+
 Decoder::Decoder()
 {
+	implementation = std::make_unique<Implementation>();
 }
 
 Decoder::~Decoder()
 {
-	if (codecContext_ != nullptr) avcodec_free_context(&codecContext_);
-	if (decodedFrame_ != nullptr) av_frame_free(&decodedFrame_);
 }
 
 void Decoder::DecodePacket(Packet* packet, const std::function<void(Frame*)>& frameCompleteDelegate)
@@ -28,19 +40,17 @@ void Decoder::DecodePacket(Packet* packet, const std::function<void(Frame*)>& fr
 #define AVERROR_EOF FFERRTAG( 'E','O','F',' ')
 #define AVERROR(e) (-(e))   ///< Returns a negative error code from a POSIX error code, to return from library functions.
 
-	decodedFrame_ = decodedFrame_ == nullptr ? av_frame_alloc() : decodedFrame_;
-
-	if (decodedFrame_ == nullptr) throw std::exception("Decoder error: Could not allocate frame");
+	if (!implementation->decodedFrame.IsValid()) throw std::exception("Decoder error: Frame not valid");
 
 	// Send the packet with the compressed data to the decoder
-	auto decodeResult = avcodec_send_packet(codecContext_, packet->GetPacket());
+	auto decodeResult = avcodec_send_packet(implementation->codec.GetCodecContext(), packet->GetPacket());
 
 	if (decodeResult < 0) throw std::exception("Decoder error: Failed to send the packet");
 
 	// Read all the output frames (in general there may be any number of them)
 	while (true)
 	{
-		decodeResult = avcodec_receive_frame(codecContext_, decodedFrame_);
+		decodeResult = avcodec_receive_frame(implementation->codec.GetCodecContext(), implementation->decodedFrame.GetAVFrame());
 
 		if (decodeResult == AVERROR(EAGAIN)) break; // Output is not available in this state
 		if (decodeResult == AVERROR_EOF) break; // Decoder has been fully flushed and there will be no more
@@ -48,40 +58,55 @@ void Decoder::DecodePacket(Packet* packet, const std::function<void(Frame*)>& fr
 		if (decodeResult == AVERROR(EINVAL)) throw std::exception("Decoder error: CodecType not opened");
 		if (decodeResult < 0) throw std::exception("Decoder error: Failed to receive frame");
 
-		Frame frame(decodedFrame_, MediaTypeMapper::FromFfmpeg(codecContext_->codec_type), RationalNumber(codecContext_->time_base.num, codecContext_->time_base.den));
-
-		frameCompleteDelegate(&frame);
+		frameCompleteDelegate(&implementation->decodedFrame);
 	}
 }
 
-AVRational Decoder::GetTimeBase() const
+CodecParameters Decoder::GetAudioParameters() const
 {
-	return codecContext_->time_base;
+	return CodecParameters()
+		.SetBitRate(implementation->codec.GetBitRate())
+		.SetSampleRate(implementation->codec.GetSampleRate())
+		.SetAudioChannelLayout(implementation->codec.GetAudioChannelLayout())
+		.SetChannelCount(implementation->codec.GetChannelCount())
+		.SetSampleFormat(implementation->codec.GetSampleFormat())
+		.SetTimeBase(implementation->codec.GetTimeBase());
 }
 
-void Decoder::Open(CodecType audioCodec)
+CodecParameters Decoder::GetVideoParameters() const
 {
-	SetCodecAndContext(CodecTypeMapper::ToFfmpeg(audioCodec));
-
-	if (avcodec_open2(codecContext_, codec_, nullptr) < 0) throw std::exception("Decoder error: Failed to open codec");
+	return CodecParameters()
+		.SetWidth(implementation->codec.GetWidth())
+		.SetHeight(implementation->codec.GetHeight())
+		.SetSampleAspectRatio(implementation->codec.GetSampleAspectRatio())
+		.SetPixelFormat(implementation->codec.GetPixelFormat())
+		.SetTimeBase(implementation->codec.GetTimeBase());
 }
 
-void Decoder::Open(AVStream* stream)
+void Decoder::Initialise(CodecType codecType)
 {
-	SetCodecAndContext(stream->codecpar->codec_id);
+	std::cout << "Decoder: Initialising..." << std::endl;
 
-	if (avcodec_parameters_to_context(codecContext_, stream->codecpar) < 0) throw std::exception("Decoder error: Failed to copy parameters to context");
+	implementation->codec.Initialise(Codec::Purpose::Decoder, codecType);
 
-	if (avcodec_open2(codecContext_, codec_, nullptr) < 0) throw std::exception("Decoder error: Failed to open codec");
+	std::cout << "Decoder: Initialised" << std::endl;
 }
 
-void Decoder::SetCodecAndContext(AVCodecID codecID)
+bool Decoder::IsValid() const
 {
-	codec_ = codec_ == nullptr ? avcodec_find_decoder(codecID) : codec_;
+	return implementation->codec.IsValid() && implementation->decodedFrame.IsValid();
+}
 
-	if (codec_ == nullptr) throw std::exception("Decoder error: Decoder not found");
+//const Codec& Decoder::GetCodec() const
+//{
+//	return implementation->codec;
+//}
 
-	codecContext_ = codecContext_ == nullptr ? avcodec_alloc_context3(codec_) : codecContext_;
+void Decoder::Open(CodecParameters* codecParameters)
+{
+	implementation->codec.CopyParameters(codecParameters);
+	implementation->codec.Open();
 
-	if (codecContext_ == nullptr) throw std::exception("Decoder error: Failed to create codec context");
+	implementation->decodedFrame.SetMediaType(implementation->codec.GetMediaType());
+	implementation->decodedFrame.SetTimeBase(implementation->codec.GetTimeBase());
 }

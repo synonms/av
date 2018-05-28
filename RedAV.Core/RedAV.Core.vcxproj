@@ -19,27 +19,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\encoding\Codec.h" />
+    <ClInclude Include="source\encoding\CodecParameters.h" />
     <ClInclude Include="source\encoding\Decoder.h" />
     <ClInclude Include="source\encoding\Encoder.h" />
+    <ClInclude Include="source\encoding\Format.h" />
     <ClInclude Include="source\enumerators\CodecType.h" />
     <ClInclude Include="source\enumerators\MediaType.h" />
+    <ClInclude Include="source\enumerators\PixelFormat.h" />
+    <ClInclude Include="source\enumerators\SampleFormat.h" />
     <ClInclude Include="source\media\Frame.h" />
     <ClInclude Include="source\media\Packet.h" />
     <ClInclude Include="source\media\Stream.h" />
     <ClInclude Include="source\muxing\Demuxer.h" />
     <ClInclude Include="source\muxing\Muxer.h" />
+    <ClInclude Include="source\utilities\Dictionary.h" />
     <ClInclude Include="source\utilities\RationalNumber.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\encoding\Codec.cpp" />
+    <ClCompile Include="source\encoding\CodecParameters.cpp" />
     <ClCompile Include="source\encoding\Decoder.cpp" />
     <ClCompile Include="source\encoding\Encoder.cpp" />
+    <ClCompile Include="source\encoding\Format.cpp" />
     <ClCompile Include="source\enumerators\CodecType.cpp" />
     <ClCompile Include="source\enumerators\MediaType.cpp" />
+    <ClCompile Include="source\enumerators\PixelFormat.cpp" />
+    <ClCompile Include="source\enumerators\SampleFormat.cpp" />
     <ClCompile Include="source\media\Frame.cpp" />
     <ClCompile Include="source\media\Packet.cpp" />
     <ClCompile Include="source\media\Stream.cpp" />
     <ClCompile Include="source\muxing\Demuxer.cpp" />
     <ClCompile Include="source\muxing\Muxer.cpp" />
+    <ClCompile Include="source\utilities\Dictionary.cpp" />
+    <ClCompile Include="source\utilities\RationalNumber.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

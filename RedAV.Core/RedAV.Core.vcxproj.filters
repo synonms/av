@@ -40,6 +40,9 @@
     <Filter Include="Header Files\Utilities">
       <UniqueIdentifier>{92039c98-1fc1-4a9a-a0e6-8819bcb5e94e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{d3ebdf75-92d8-46ee-83cb-a490a464803e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\encoding\Decoder.h">
@@ -72,6 +75,24 @@
     <ClInclude Include="source\utilities\RationalNumber.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="source\encoding\Codec.h">
+      <Filter>Header Files\Encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enumerators\SampleFormat.h">
+      <Filter>Header Files\Enumerators</Filter>
+    </ClInclude>
+    <ClInclude Include="source\enumerators\PixelFormat.h">
+      <Filter>Header Files\Enumerators</Filter>
+    </ClInclude>
+    <ClInclude Include="source\encoding\CodecParameters.h">
+      <Filter>Header Files\Encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utilities\Dictionary.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\encoding\Format.h">
+      <Filter>Header Files\Encoding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\encoding\Decoder.cpp">
@@ -100,6 +121,27 @@
     </ClCompile>
     <ClCompile Include="source\enumerators\CodecType.cpp">
       <Filter>Source Files\Enumerators</Filter>
+    </ClCompile>
+    <ClCompile Include="source\encoding\Codec.cpp">
+      <Filter>Source Files\Encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enumerators\SampleFormat.cpp">
+      <Filter>Source Files\Enumerators</Filter>
+    </ClCompile>
+    <ClCompile Include="source\enumerators\PixelFormat.cpp">
+      <Filter>Source Files\Enumerators</Filter>
+    </ClCompile>
+    <ClCompile Include="source\encoding\CodecParameters.cpp">
+      <Filter>Source Files\Encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utilities\Dictionary.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utilities\RationalNumber.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\encoding\Format.cpp">
+      <Filter>Source Files\Encoding</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

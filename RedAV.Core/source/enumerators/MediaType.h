@@ -13,6 +13,7 @@ namespace redav
 			Unknown = -1,
 			Video = 0,
 			Audio = 1,
+			AudioAndVideo = 99
 		};
 
 		class MediaTypeMapper

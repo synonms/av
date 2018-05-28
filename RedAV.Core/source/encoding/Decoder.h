@@ -1,15 +1,15 @@
 #pragma once
 
 #include <functional>
+#include <memory>
 
-#include <enumerators/CodecType.h>
-#include <media/Frame.h>
-#include <media/Packet.h>
-
-struct AVCodec;
-struct AVCodecContext;
-struct AVRational;
-struct AVStream;
+#include <encoding\Codec.h>
+#include <encoding\CodecParameters.h>
+#include <enumerators\CodecType.h>
+#include <media\Frame.h>
+#include <media\Packet.h>
+#include <media\Stream.h>
+#include <utilities\RationalNumber.h>
 
 namespace redav
 {
@@ -22,17 +22,16 @@ namespace redav
 			~Decoder();
 
 			void DecodePacket(media::Packet* packet, const std::function<void(media::Frame*)>& frameCompleteDelegate);
-			AVRational GetTimeBase() const;
-			void Open(AVStream* stream);
-			void Open(enumerators::CodecType audioCodec);
+//			const Codec& GetCodec() const;
+			CodecParameters GetAudioParameters() const;
+			CodecParameters GetVideoParameters() const;
+			void Initialise(enumerators::CodecType codecType);
+			bool IsValid() const;
+			void Open(CodecParameters* codecParameters);
 
 		private:
-			AVCodec* codec_{ nullptr };
-			AVCodecContext* codecContext_{ nullptr };
-			AVFrame* decodedFrame_{ nullptr };
-
-			void SetCodecAndContext(AVCodecID codecID);
-
+			class Implementation;
+			std::unique_ptr<Implementation> implementation;
 		};
 	}
 }

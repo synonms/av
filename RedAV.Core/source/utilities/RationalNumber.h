@@ -1,5 +1,9 @@
 #pragma once
 
+#include <memory>
+
+struct AVRational;
+
 namespace redav
 {
 	namespace utilities
@@ -7,12 +11,22 @@ namespace redav
 		class RationalNumber
 		{
 		public:
-			RationalNumber(int num, int den)
-				: numerator(num), denominator(den)
-			{}
+			RationalNumber(int numerator = 1, int denominator = 1);
+			RationalNumber(const RationalNumber& other);
+			RationalNumber& operator=(const RationalNumber& other);
+			~RationalNumber();
 
-			int numerator;
-			int denominator;
+			int GetDenominator() const;
+			int GetNumerator() const;
+
+		public: //Internal
+			RationalNumber(AVRational rational);
+
+			AVRational GetAVRational() const;
+
+		private:
+			class Implementation;
+			std::unique_ptr<Implementation> implementation;
 		};
 	}
 }

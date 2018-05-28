@@ -5,54 +5,128 @@ extern "C"
 #include <libavformat/avformat.h>
 }
 
+#include <iostream>
+
 using namespace redav::encoding;
 using namespace redav::enumerators;
 using namespace redav::media;
 using namespace redav::muxing;
 
-void Demuxer::Open(const std::string& filePath)
+class Demuxer::Implementation 
 {
-	filePath_ = filePath;
-	streams_.clear();
-
-	if (avformat_open_input(&formatContext_, filePath_.c_str(), nullptr, nullptr) < 0) throw std::exception(("Demuxer error: Failed to open input file " + filePath_).c_str());
-
-	if (avformat_find_stream_info(formatContext_, nullptr) < 0) throw std::exception("Demuxer error: Failed to find stream info");
-
-	for (auto i = 0u; i < formatContext_->nb_streams; ++i)
+public:
+	Implementation()
 	{
-		streams_[i] = formatContext_->streams[i];
 	}
 
-	const auto audioStreamIndex = av_find_best_stream(formatContext_, AVMediaType::AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
+	AVFormatContext* formatContext{ nullptr };
+	encoding::Decoder audioDecoder;
+	encoding::Decoder videoDecoder;
 
-	if (audioStreamIndex >= 0)
+	void SetUp(const std::string& filePath)
 	{
-		audioDecoder_.Open(formatContext_->streams[audioStreamIndex]);
+		if (avformat_open_input(&formatContext, filePath.c_str(), nullptr, nullptr) < 0) throw std::exception(("Demuxer error: Failed to open input file " + filePath).c_str());
+
+		std::cout << "Demuxer: Input file opened" << std::endl;
+
+		if (avformat_find_stream_info(formatContext, nullptr) < 0) throw std::exception("Demuxer error: Failed to find stream info");
+
+		std::cout << "Demuxer: Stream info found" << std::endl;
+
+		const auto audioStreamIndex = av_find_best_stream(formatContext, AVMediaType::AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
+
+		if (audioStreamIndex >= 0)
+		{
+			std::cout << "Demuxer: Found audio stream index " << audioStreamIndex << std::endl;
+
+			const auto audioStream = formatContext->streams[audioStreamIndex];
+			const auto codecType = CodecTypeMapper::FromFfmpeg(audioStream->codecpar->codec_id);
+
+			if (codecType != CodecType::Unknown)
+			{
+				CodecParameters codecParameters(audioStream->codecpar);
+				audioDecoder.Initialise(codecType);
+				audioDecoder.Open(&codecParameters);
+
+				std::cout << "Demuxer: Audio stream and decoder ready" << std::endl;
+			}
+			else
+			{
+				std::cout << "Demuxer: Audio stream codec unknown - skipping" << std::endl;
+			}
+		}
+
+		const auto videoStreamIndex = av_find_best_stream(formatContext, AVMediaType::AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
+
+		if (videoStreamIndex >= 0)
+		{
+			std::cout << "Demuxer: Found video stream index " << videoStreamIndex << std::endl;
+
+			const auto videoStream = formatContext->streams[videoStreamIndex];
+			const auto codecType = CodecTypeMapper::FromFfmpeg(videoStream->codecpar->codec_id);
+
+			if (codecType != CodecType::Unknown)
+			{
+				CodecParameters codecParameters(videoStream->codecpar);
+				videoDecoder.Initialise(CodecTypeMapper::FromFfmpeg(videoStream->codecpar->codec_id));
+				videoDecoder.Open(&codecParameters);
+
+				std::cout << "Demuxer: Video stream and decoder ready" << std::endl;
+			}
+			else
+			{
+				std::cout << "Demuxer: Video stream codec unknown - skipping" << std::endl;
+			}
+		}
 	}
 
-	const auto videoStreamIndex = av_find_best_stream(formatContext_, AVMediaType::AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
-
-	if (videoStreamIndex >= 0)
+	void TearDown()
 	{
-		videoDecoder_.Open(formatContext_->streams[videoStreamIndex]);
+		if (formatContext != nullptr)
+		{
+			avformat_close_input(&formatContext);
+			formatContext = nullptr;
+		}
 	}
+};
+
+Demuxer::Demuxer()
+{
+	implementation = std::make_unique<Implementation>();
 }
 
-void Demuxer::DecodePackets(const std::function<void(Frame*)>& frameDecodedFunc)
+Demuxer::~Demuxer()
+{
+}
+
+bool Demuxer::IsValid() const
+{
+	return implementation->formatContext != nullptr;
+}
+
+void Demuxer::Open(const std::string& filePath)
+{
+	std::cout << "Demuxer: Initialising..." << std::endl;
+
+	implementation->SetUp(filePath);
+
+	std::cout << "Demuxer: Initialised" << std::endl;
+}
+
+void Demuxer::DecodePackets(MediaType mediaType, const std::function<void(Frame*)>& frameDecodedFunc)
 {
 	AVPacket avPacket;
 	Packet packet(&avPacket);
 
-	while (av_read_frame(formatContext_, packet.GetPacket()) >= 0)
+	while (av_read_frame(implementation->formatContext, packet.GetPacket()) >= 0)
 	{
-		switch (formatContext_->streams[packet.GetPacket()->stream_index]->codecpar->codec_type)
+		switch (implementation->formatContext->streams[packet.GetPacket()->stream_index]->codecpar->codec_type)
 		{
 		case AVMEDIA_TYPE_AUDIO:
-			audioDecoder_.DecodePacket(&packet, [&frameDecodedFunc](Frame* frame) { frameDecodedFunc(frame); });
+			if (mediaType == MediaType::Audio || mediaType == MediaType::AudioAndVideo) implementation->audioDecoder.DecodePacket(&packet, [&frameDecodedFunc](Frame* frame) { frameDecodedFunc(frame); });
 			break;
 		case AVMEDIA_TYPE_VIDEO:
-			videoDecoder_.DecodePacket(&packet, [&frameDecodedFunc](Frame* frame) { frameDecodedFunc(frame); });
+			if (mediaType == MediaType::Video || mediaType == MediaType::AudioAndVideo) implementation->videoDecoder.DecodePacket(&packet, [&frameDecodedFunc](Frame* frame) { frameDecodedFunc(frame); });
 			break;
 		default:
 			break;
@@ -60,15 +134,17 @@ void Demuxer::DecodePackets(const std::function<void(Frame*)>& frameDecodedFunc)
 	}
 }
 
-void Demuxer::Close()
+Decoder& Demuxer::GetAudioDecoder() const
 {
-	filePath_.clear();
-	streams_.clear();
-
-	if (formatContext_ != nullptr) avformat_close_input(&formatContext_);
+	return implementation->audioDecoder;
 }
 
-const std::map<int, Stream>& Demuxer::GetStreams() const
+Decoder& Demuxer::GetVideoDecoder() const
 {
-	return streams_;
+	return implementation->videoDecoder;
+}
+
+void Demuxer::Close()
+{
+	implementation->TearDown();
 }

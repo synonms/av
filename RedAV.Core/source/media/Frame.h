@@ -1,6 +1,10 @@
 #pragma once
 
+#include <memory>
+
 #include <enumerators/MediaType.h>
+#include <enumerators/PixelFormat.h>
+#include <enumerators/SampleFormat.h>
 #include <utilities/RationalNumber.h>
 
 struct AVFrame;
@@ -12,16 +16,23 @@ namespace redav
 		class Frame
 		{
 		public:
-			Frame(AVFrame* frame, enumerators::MediaType mediaType, utilities::RationalNumber timeBase);
+			Frame();
+			~Frame();
 
-			AVFrame* GetFrame() const;
 			enumerators::MediaType GetMediaType() const;
 			utilities::RationalNumber GetTimeBase() const;
+			void InitialiseForAudio(enumerators::SampleFormat sampleFormat, uint64_t channelLayout, int sampleRate, int noOfSamples);
+			void InitialiseForVideo(enumerators::PixelFormat pixelFormat, int width, int height);
+			bool IsValid() const;
+			Frame& SetMediaType(enumerators::MediaType);
+			Frame& SetTimeBase(const utilities::RationalNumber&);
+
+		public: // Internal
+			AVFrame* GetAVFrame() const;
 
 		private:
-			AVFrame* frame_;
-			enumerators::MediaType mediaType_;
-			utilities::RationalNumber timeBase_;
+			class Implementation;
+			std::unique_ptr<Implementation> implementation;
 		};
 	}
 }

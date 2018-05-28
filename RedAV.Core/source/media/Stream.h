@@ -1,7 +1,12 @@
 #pragma once
 
-#include <enumerators/CodecType.h>
-#include <enumerators/MediaType.h>
+#include <encoding\Codec.h>
+#include <encoding\Format.h>
+#include <enumerators\CodecType.h>
+#include <enumerators\MediaType.h>
+#include <utilities\RationalNumber.h>
+
+#include <memory>
 
 struct AVStream;
 
@@ -12,13 +17,23 @@ namespace redav
 		class Stream
 		{
 		public:
-			Stream(AVStream* stream = nullptr);
+			Stream();
+			~Stream();
 
-			enumerators::CodecType GetAudioCodec() const;
+			void CopyParameters(const encoding::Codec& codec);
+			enumerators::CodecType GetAudioCodecType() const;
 			enumerators::MediaType GetMediaType() const;
+			void Initialise(const encoding::Format& format);
+			bool IsValid() const;
+			void SetTimeBase(utilities::RationalNumber timeBase);
+
+		// Internal
+		public:
+			AVStream * GetStream() const;
 
 		private:
-			AVStream* stream_;
+			class Implementation;
+			std::unique_ptr<Implementation> implementation;
 		};
 	}
 }
