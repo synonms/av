@@ -9,6 +9,7 @@ extern "C"
 
 using namespace redav::encoding;
 using namespace redav::enumerators;
+using namespace redav::media;
 
 class Format::Implementation
 {
@@ -20,21 +21,11 @@ public:
 
 	AVFormatContext* formatContext{ nullptr };
 
-	void SetUp(const std::string& filePath)
+	void SetUp()
 	{
-		std::cout << "Format: Guessing format..." << std::endl;
+		formatContext = avformat_alloc_context();
 
-		auto outputFormat = av_guess_format(nullptr, filePath.c_str(), nullptr);
-
-		if (outputFormat == nullptr) throw std::exception("Format error: Failed to determine format from file path");
-
-		std::cout << "Format: Format guessed, allocating context..." << std::endl;
-
-		avformat_alloc_output_context2(&formatContext, outputFormat, nullptr, nullptr);
-
-		if (formatContext == nullptr) throw std::exception("Format error: Failed to create format context");
-
-		std::cout << "Format: Context created" << std::endl;
+		if (formatContext == nullptr) throw std::exception("Format error: Failed to allocate context");
 	}
 
 	void TearDown()
@@ -83,12 +74,34 @@ bool Format::HasGlobalHeader() const
 	return implementation->formatContext->oformat->flags & 0x0040;
 }
 
-void Format::Initialise(const std::string& filePath)
+void Format::Initialise()
 {
-	implementation->SetUp(filePath);
+	implementation->SetUp();
 }
 
 bool Format::IsValid() const
 {
 	return implementation->formatContext != nullptr;
+}
+
+// TODO - This is output only - account for input
+void Format::Open(const File& file)
+{
+	if (file.GetAVIOContext() == nullptr) throw std::exception("Format error: IO context is null");
+	if (file.GetFilePath().empty()) throw std::exception("Format error: File path not set");
+
+	/* Associate the output file with the container format context. */
+	implementation->formatContext->pb = file.GetAVIOContext();
+
+	std::cout << "Format: Guessing format..." << std::endl;
+
+	implementation->formatContext->oformat = av_guess_format(nullptr, file.GetFilePath().c_str(), nullptr);
+
+	if (implementation->formatContext->oformat == nullptr) throw std::exception("Format error: Failed to determine format from file path");
+
+	std::cout << "Format: Format guessed - setting url..." << std::endl;
+
+	implementation->formatContext->url = av_strdup(file.GetFilePath().c_str());
+
+	std::cout << "Format: Open" << std::endl;
 }

@@ -20,8 +20,8 @@ public:
 	}
 
 	AVFormatContext* formatContext{ nullptr };
-	encoding::Decoder audioDecoder;
-	encoding::Decoder videoDecoder;
+	Decoder audioDecoder;
+	Decoder videoDecoder;
 
 	void SetUp(const std::string& filePath)
 	{
@@ -32,6 +32,11 @@ public:
 		if (avformat_find_stream_info(formatContext, nullptr) < 0) throw std::exception("Demuxer error: Failed to find stream info");
 
 		std::cout << "Demuxer: Stream info found" << std::endl;
+
+		if (formatContext->nb_streams != 1)
+		{
+			std::cout << "Demuxer: WARNING - " << formatContext->nb_streams << " streams found" << std::endl;
+		}
 
 		const auto audioStreamIndex = av_find_best_stream(formatContext, AVMediaType::AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
 

@@ -12,9 +12,10 @@ extern "C"
 #include <fstream>
 #include <iostream>
 
-#include <encoding\Encoder.h>
-#include <encoding\Format.h>
-#include <media\Stream.h>
+#include <encoding/Encoder.h>
+#include <encoding/Format.h>
+#include <media/File.h>
+#include <media/Stream.h>
 
 using namespace redav::enumerators;
 using namespace redav::encoding;
@@ -26,6 +27,7 @@ class Muxer::Implementation
 {
 public:
 	bool isInterleaved{ true };
+	File file;
 	Format format;
 	Stream audioStream;
 	Stream videoStream;
@@ -50,19 +52,19 @@ public:
 
 	void SetUp(const std::string& filePath, CodecParameters* audioParameters, CodecParameters* videoParameters)
 	{
-#define AVIO_FLAG_WRITE 2
+		std::cout << "Muxer: Opening output file..." << std::endl;
+
+		file.Open(filePath);
+
 		std::cout << "Muxer: Initialising format..." << std::endl;
 
-		format.Initialise(filePath);
+		format.Initialise();
+		format.Open(file);
 
 		std::cout << "Muxer: Format initialised" << std::endl;
 
 		if (audioParameters != nullptr && audioParameters->GetCodecType() != CodecType::Unknown) SetUpAudio(audioParameters);
 		if (videoParameters != nullptr && videoParameters->GetCodecType() != CodecType::Unknown) SetUpVideo(videoParameters);
-
-		std::cout << "Muxer: Opening output file..." << std::endl;
-
-		if (avio_open2(&format.GetAVFormatContext()->pb, filePath.c_str(), AVIO_FLAG_WRITE, nullptr, nullptr) < 0) throw std::exception("Muxer error: Unable to open output file");
 
 		std::cout << "Muxer: Output file opened" << std::endl;
 		std::cout << "Muxer: Writing header..." << std::endl;
@@ -74,16 +76,15 @@ public:
 
 	void SetUpAudio(CodecParameters* parameters)
 	{
+		std::cout << "Muxer: Initialising audio encoder..." << std::endl;
+
+		audioEncoder.Initialise(parameters ? CodecType::PCM_Signed16BitLittleEndian : parameters->GetCodecType());
+
 		std::cout << "Muxer: Initialising audio stream..." << std::endl;
 
 		audioStream.Initialise(format);
 
 		std::cout << "Muxer: Audio stream initialised" << std::endl;
-		std::cout << "Muxer: Initialising audio encoder..." << std::endl;
-
-		audioEncoder.Initialise(parameters ? CodecType::PCM_Signed16BitLittleEndian : parameters->GetCodecType());
-
-		std::cout << "Muxer: Audio encoder initialised" << std::endl;
 
 		audioEncoder.GetCodec()
 			.SetSampleRate(parameters == nullptr ? 44100 : parameters->GetSampleRate())

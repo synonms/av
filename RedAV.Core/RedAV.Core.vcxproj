@@ -28,6 +28,7 @@
     <ClInclude Include="source\enumerators\MediaType.h" />
     <ClInclude Include="source\enumerators\PixelFormat.h" />
     <ClInclude Include="source\enumerators\SampleFormat.h" />
+    <ClInclude Include="source\media\File.h" />
     <ClInclude Include="source\media\Frame.h" />
     <ClInclude Include="source\media\Packet.h" />
     <ClInclude Include="source\media\Stream.h" />
@@ -46,6 +47,7 @@
     <ClCompile Include="source\enumerators\MediaType.cpp" />
     <ClCompile Include="source\enumerators\PixelFormat.cpp" />
     <ClCompile Include="source\enumerators\SampleFormat.cpp" />
+    <ClCompile Include="source\media\File.cpp" />
     <ClCompile Include="source\media\Frame.cpp" />
     <ClCompile Include="source\media\Packet.cpp" />
     <ClCompile Include="source\media\Stream.cpp" />

@@ -93,6 +93,9 @@
     <ClInclude Include="source\encoding\Format.h">
       <Filter>Header Files\Encoding</Filter>
     </ClInclude>
+    <ClInclude Include="source\media\File.h">
+      <Filter>Header Files\Media</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\encoding\Decoder.cpp">
@@ -142,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="source\encoding\Format.cpp">
       <Filter>Source Files\Encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="source\media\File.cpp">
+      <Filter>Source Files\Media</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
