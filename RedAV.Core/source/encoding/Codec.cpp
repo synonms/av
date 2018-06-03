@@ -88,6 +88,11 @@ namespace redav
 			return implementation->codecContext->channels;
 		}
 
+		int Codec::GetFrameSize() const
+		{
+			return implementation->codecContext->frame_size;
+		}
+
 		int Codec::GetHeight() const
 		{
 			return implementation->codecContext->height;

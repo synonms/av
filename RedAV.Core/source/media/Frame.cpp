@@ -5,6 +5,7 @@ extern "C"
 #include <libavformat/avformat.h>
 }
 
+using namespace redav::encoding;
 using namespace redav::enumerators;
 using namespace redav::media;
 using namespace redav::utilities;
@@ -37,9 +38,29 @@ AVFrame* Frame::GetAVFrame() const
 	return implementation->frame;
 }
 
+uint8_t* Frame::GetData() const
+{
+	return implementation->frame->data[0];
+}
+
+uint8_t** Frame::GetExtendedData() const
+{
+	return implementation->frame->extended_data;
+}
+
 MediaType Frame::GetMediaType() const
 {
 	return implementation->mediaType;
+}
+
+int Frame::GetNoOfSamples() const
+{
+	return implementation->frame->nb_samples;
+}
+
+uint64_t Frame::GetPresentationTimestamp() const
+{
+	return implementation->frame->pts;
 }
 
 RationalNumber Frame::GetTimeBase() const
@@ -47,23 +68,23 @@ RationalNumber Frame::GetTimeBase() const
 	return implementation->timeBase;
 }
 
-void Frame::InitialiseForAudio(SampleFormat sampleFormat, uint64_t channelLayout, int sampleRate, int noOfSamples)
+void Frame::InitialiseForAudio(const Codec& codec)
 {
-	implementation->frame->format = SampleFormatMapper::ToFfmpeg(sampleFormat);
-	implementation->frame->channel_layout = channelLayout;
-	implementation->frame->sample_rate = sampleRate;
-	implementation->frame->nb_samples = noOfSamples;
+	implementation->frame->format = SampleFormatMapper::ToFfmpeg(codec.GetSampleFormat());
+	implementation->frame->channel_layout = codec.GetAudioChannelLayout();
+	implementation->frame->sample_rate = codec.GetSampleRate();
+	implementation->frame->nb_samples = codec.GetNoOfSamples();
 
-	if (noOfSamples > 0) {
+	if (implementation->frame->nb_samples > 0) {
 		if (av_frame_get_buffer(implementation->frame, 0) < 0) throw std::exception("Could not allocate audio buffer");
 	}
 }
 
-void Frame::InitialiseForVideo(PixelFormat pixelFormat, int width, int height)
+void Frame::InitialiseForVideo(const Codec& codec)
 {
-	implementation->frame->format = PixelFormatMapper::ToFfmpeg(pixelFormat);
-	implementation->frame->width = width;
-	implementation->frame->height = height;
+	implementation->frame->format = PixelFormatMapper::ToFfmpeg(codec.GetPixelFormat());
+	implementation->frame->width = codec.GetWidth();
+	implementation->frame->height = codec.GetHeight();
 
 	if (av_frame_get_buffer(implementation->frame, 32) < 0) throw std::exception("Could not allocate video buffer");
 }
@@ -76,6 +97,13 @@ bool Frame::IsValid() const
 Frame& Frame::SetMediaType(MediaType mediaType)
 {
 	implementation->mediaType = mediaType;
+
+	return *this;
+}
+
+Frame& Frame::SetPresentationTimestamp(uint64_t value)
+{
+	implementation->frame->pts = value;
 
 	return *this;
 }

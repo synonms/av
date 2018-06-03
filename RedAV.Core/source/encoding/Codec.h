@@ -39,6 +39,7 @@ namespace redav
 			uint64_t GetAudioChannelLayout() const;
 			int64_t GetBitRate() const;
 			int GetChannelCount() const;
+			int GetFrameSize() const;
 			int GetHeight() const;
 			enumerators::MediaType GetMediaType() const;
 			int GetNoOfSamples() const;

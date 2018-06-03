@@ -12,10 +12,10 @@ extern "C"
 #include <fstream>
 #include <iostream>
 
-#include <encoding/Encoder.h>
 #include <encoding/Format.h>
 #include <media/File.h>
 #include <media/Stream.h>
+#include <utilities/AudioBuffer.h>
 
 using namespace redav::enumerators;
 using namespace redav::encoding;
@@ -33,6 +33,7 @@ public:
 	Stream videoStream;
 	Encoder audioEncoder;
 	Encoder videoEncoder;
+	AudioBuffer audioBuffer;
 
 	int WritePacket(const RationalNumber& timeBase, AVStream* stream, AVPacket* packet) const
 	{
@@ -80,12 +81,6 @@ public:
 
 		audioEncoder.Initialise(parameters ? CodecType::PCM_Signed16BitLittleEndian : parameters->GetCodecType());
 
-		std::cout << "Muxer: Initialising audio stream..." << std::endl;
-
-		audioStream.Initialise(format);
-
-		std::cout << "Muxer: Audio stream initialised" << std::endl;
-
 		audioEncoder.GetCodec()
 			.SetSampleRate(parameters == nullptr ? 44100 : parameters->GetSampleRate())
 			.SetBitRate(parameters == nullptr ? 64000 : parameters->GetBitRate())
@@ -94,25 +89,27 @@ public:
 			.SetSampleFormat(parameters == nullptr ? SampleFormat::FloatPlanar : parameters->GetSampleFormat())
 			.SetTimeBase(parameters == nullptr ? 1 : parameters->GetTimeBase());
 
-		std::cout << "Muxer: Audio encoder configured" << std::endl;
+		if (format.HasGlobalHeader()) audioEncoder.SetGlobalHeader();
 
 		audioEncoder.Open(nullptr);
 
-		std::cout << "Muxer: Audio encoder opened" << std::endl;
+		std::cout << "Muxer: Audio encoder opened, initialising stream..." << std::endl;
 
+		audioStream.Initialise(format);
+		audioStream.SetTimeBase(audioEncoder.GetCodec().GetTimeBase());
 		audioStream.CopyParameters(audioEncoder.GetCodec());
 
-		std::cout << "Muxer: Audio parameters copied to stream" << std::endl;
+		std::cout << "Muxer: Stream initialised, initialised audio buffer..." << std::endl;
 
-		if (format.HasGlobalHeader()) audioEncoder.SetGlobalHeader();
-
-		audioStream.SetTimeBase(audioEncoder.GetCodec().GetTimeBase());
+		audioBuffer.Initialise(audioEncoder.GetCodec().GetSampleFormat(), audioEncoder.GetCodec().GetChannelCount());
 
 		std::cout << "Muxer: Audio setup complete" << std::endl;
 	}
 
 	void SetUpVideo(CodecParameters* parameters)
 	{
+		std::cout << "Muxer: Initialising video encoder..." << std::endl;
+
 		videoStream.Initialise(format);
 
 		// TODO - Add video codecs
@@ -134,6 +131,8 @@ public:
 		if (format.HasGlobalHeader()) videoEncoder.SetGlobalHeader();
 
 		videoStream.SetTimeBase(videoEncoder.GetCodec().GetTimeBase());
+
+		std::cout << "Muxer: Video setup complete" << std::endl;
 	}
 
 	void TearDown()
@@ -164,6 +163,11 @@ void Muxer::Close()
 	std::cout << "Muxer: Closed" << std::endl;
 }
 
+const Encoder& Muxer::GetAudioEncoder() const
+{
+	return implementation->audioEncoder;
+}
+
 bool Muxer::IsValid() const
 {
 	return implementation->format.IsValid();
@@ -181,24 +185,46 @@ void Muxer::Open(const std::string& filePath, CodecParameters* audioParameters, 
 	std::cout << "Muxer: Opened" << std::endl;
 }
 
-void Muxer::WriteFrame(Frame* frame)
+void Muxer::WriteAudioFrame(const Frame& frame, bool isFinished, Resampler* resampler)
 {
-	switch(frame->GetMediaType())
+	auto channelCount = implementation->audioEncoder.GetCodec().GetChannelCount();
+
+	// Temporary storage for the converted input samples.
+	// Each pointer points to a uint8_t* representing audio for a given channel
+	// e.g. converted_input_samples[0] -> Left, converted_input_samples[1] -> Right
+	// TODO - Change this for a collection of vector<uint8_t>
+	// Interleaved (16bit): s1 s1 s2 s2 s1 s1 s2 s2
+	// Planar (16 bit) : s1 s1 s1 s1 s2 s2 s2 s2
+	uint8_t** converted_input_samples = nullptr;
+
+	// Allocate as many pointers as there are audio channels.
+	// Each pointer will later point to the audio samples of the corresponding channels (although it may be NULL for interleaved formats).
+	if (!(*converted_input_samples = (uint8_t*)calloc(channelCount, sizeof(uint8_t*)))) throw std::exception("Muxer: Failed to allocate input sample pointers");
+
+	// Allocate memory for the samples of all channels in one consecutive block for convenience.
+	if (av_samples_alloc(converted_input_samples, nullptr, channelCount, frame.GetNoOfSamples(), SampleFormatMapper::ToFfmpeg(implementation->audioEncoder.GetCodec().GetSampleFormat()), 0) < 0)
 	{
-	case MediaType::Audio:
-		implementation->audioEncoder.EncodeFrame(frame, [=](Packet* packet)
+		av_freep(&converted_input_samples[0]);
+		free(converted_input_samples);
+		throw std::exception("Muxer: Failed to allocate input sample buffers");
+	}
+
+	// Convert the input samples to the desired output sample format.
+	// The conversion happens on a per - frame basis, the size of which is specified by frame_size.
+	// This requires a temporary storage provided by converted_input_samples.
+	resampler->Convert(frame, *converted_input_samples);
+
+	implementation->audioBuffer.AddSamples(converted_input_samples, frame.GetNoOfSamples());
+
+	// If we have enough samples for the encoder, we encode them.
+	// At the end of the file, we pass the remaining samples to the encoder.
+	while (implementation->audioBuffer.GetSize() >= implementation->audioEncoder.GetCodec().GetFrameSize()
+		|| (isFinished && implementation->audioBuffer.GetSize() > 0))
+	{
+		implementation->audioEncoder.EncodeAudio(implementation->audioBuffer, [=,&frame](const Packet& packet)
 		{
-			if (implementation->WritePacket(frame->GetTimeBase(), implementation->audioStream.GetStream(), packet->GetPacket()) < 0) throw std::exception("Muxer: Error writing audio packet");
+			if (implementation->WritePacket(frame.GetTimeBase(), implementation->audioStream.GetStream(), packet.GetAVPacket()) < 0) throw std::exception("Muxer: Error writing audio packet");
 		});
-		break;
-	case MediaType::Video:
-		implementation->videoEncoder.EncodeFrame(frame, [=](Packet* packet)
-		{
-			if (implementation->WritePacket(frame->GetTimeBase(), implementation->videoStream.GetStream(), packet->GetPacket()) < 0) throw std::exception("Muxer: Error writing video packet");
-		});
-		break;
-	default:
-		break;
+
 	}
 }
-

@@ -7,36 +7,53 @@ extern "C"
 
 using namespace redav::media;
 
-Packet::Packet(AVPacket* packet) 
-	: packet_(packet) 
-{}
+class Packet::Implementation
+{
+public:
+	Implementation()
+	{
+		packet = av_packet_alloc();
+	}
+
+	AVPacket* packet;
+};
+
+Packet::Packet()
+{
+	implementation = std::make_unique<Implementation>();
+}
+
+Packet::~Packet()
+{
+	if (implementation->packet) av_packet_free(&implementation->packet);
+}
+
+AVPacket* Packet::GetAVPacket() const
+{
+	return implementation->packet;
+}
 
 uint8_t* Packet::GetData() const
 {
-	return packet_->data;
+	return implementation->packet->data;
 }
 
 uint64_t Packet::GetDuration() const
 {
-	return packet_->duration;
-}
-
-AVPacket* Packet::GetPacket() const
-{
-	return packet_;
+	return implementation->packet->duration;
 }
 
 int64_t Packet::GetPosition() const
 {
-	return packet_->pos;
+	return implementation->packet->pos;
 }
 
 int Packet::GetSize() const
 {
-	return packet_->size;
+	return implementation->packet->size;
 }
 
 int Packet::GetStreamIndex() const
 {
-	return packet_->stream_index;
+	return implementation->packet->stream_index;
 }

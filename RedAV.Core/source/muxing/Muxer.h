@@ -3,8 +3,10 @@
 #include <memory>
 #include <string>
 
-#include <encoding\CodecParameters.h>
-#include <media\Frame.h>
+#include <encoding/CodecParameters.h>
+#include <encoding/Encoder.h>
+#include <media/Frame.h>
+#include <utilities/Resampler.h>
 
 namespace redav
 {
@@ -17,9 +19,10 @@ namespace redav
 			~Muxer();
 
 			void Close();
+			const encoding::Encoder& GetAudioEncoder() const;
 			bool IsValid() const;
 			void Open(const std::string& filePath, encoding::CodecParameters* audioParameters, encoding::CodecParameters* videoParameters);
-			void WriteFrame(media::Frame* frame);
+			void WriteAudioFrame(const media::Frame& frame, bool isFinished = false, utilities::Resampler* resampler = nullptr);
 
 		private:
 			class Implementation;

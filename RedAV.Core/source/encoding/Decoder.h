@@ -21,9 +21,9 @@ namespace redav
 			Decoder();
 			~Decoder();
 
-			void DecodePacket(media::Packet* packet, const std::function<void(media::Frame*)>& frameCompleteDelegate);
-//			const Codec& GetCodec() const;
+			void DecodePacket(const media::Packet& packet, const std::function<void(const media::Frame&)>& frameCompleteDelegate);
 			CodecParameters GetAudioParameters() const;
+			const Codec& GetCodec() const;
 			CodecParameters GetVideoParameters() const;
 			void Initialise(enumerators::CodecType codecType);
 			bool IsValid() const;

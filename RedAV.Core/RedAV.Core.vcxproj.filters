@@ -96,6 +96,12 @@
     <ClInclude Include="source\media\File.h">
       <Filter>Header Files\Media</Filter>
     </ClInclude>
+    <ClInclude Include="source\utilities\Resampler.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utilities\AudioBuffer.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\encoding\Decoder.cpp">
@@ -148,6 +154,12 @@
     </ClCompile>
     <ClCompile Include="source\media\File.cpp">
       <Filter>Source Files\Media</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utilities\Resampler.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utilities\AudioBuffer.cpp">
+      <Filter>Source Files\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

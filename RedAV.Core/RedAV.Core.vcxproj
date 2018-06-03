@@ -34,8 +34,10 @@
     <ClInclude Include="source\media\Stream.h" />
     <ClInclude Include="source\muxing\Demuxer.h" />
     <ClInclude Include="source\muxing\Muxer.h" />
+    <ClInclude Include="source\utilities\AudioBuffer.h" />
     <ClInclude Include="source\utilities\Dictionary.h" />
     <ClInclude Include="source\utilities\RationalNumber.h" />
+    <ClInclude Include="source\utilities\Resampler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\encoding\Codec.cpp" />
@@ -53,8 +55,10 @@
     <ClCompile Include="source\media\Stream.cpp" />
     <ClCompile Include="source\muxing\Demuxer.cpp" />
     <ClCompile Include="source\muxing\Muxer.cpp" />
+    <ClCompile Include="source\utilities\AudioBuffer.cpp" />
     <ClCompile Include="source\utilities\Dictionary.cpp" />
     <ClCompile Include="source\utilities\RationalNumber.cpp" />
+    <ClCompile Include="source\utilities\Resampler.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

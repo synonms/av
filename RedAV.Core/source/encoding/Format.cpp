@@ -32,7 +32,7 @@ public:
 	{
 		if (formatContext != nullptr)
 		{
-			avformat_close_input(&formatContext);
+			avformat_free_context(formatContext);
 			formatContext = nullptr;
 		}
 	}

@@ -33,7 +33,7 @@ Decoder::~Decoder()
 {
 }
 
-void Decoder::DecodePacket(Packet* packet, const std::function<void(Frame*)>& frameCompleteDelegate)
+void Decoder::DecodePacket(const Packet& packet, const std::function<void(const Frame&)>& frameCompleteDelegate)
 {
 #define MKTAG(a,b,c,d) ((a) | ((b) << 8) | ((c) << 16) | ((unsigned)(d) << 24))
 #define FFERRTAG(a, b, c, d) (-(int)MKTAG(a, b, c, d))
@@ -43,7 +43,7 @@ void Decoder::DecodePacket(Packet* packet, const std::function<void(Frame*)>& fr
 	if (!implementation->decodedFrame.IsValid()) throw std::exception("Decoder error: Frame not valid");
 
 	// Send the packet with the compressed data to the decoder
-	auto decodeResult = avcodec_send_packet(implementation->codec.GetCodecContext(), packet->GetPacket());
+	auto decodeResult = avcodec_send_packet(implementation->codec.GetCodecContext(), packet.GetAVPacket());
 
 	if (decodeResult < 0) throw std::exception("Decoder error: Failed to send the packet");
 
@@ -58,7 +58,7 @@ void Decoder::DecodePacket(Packet* packet, const std::function<void(Frame*)>& fr
 		if (decodeResult == AVERROR(EINVAL)) throw std::exception("Decoder error: CodecType not opened");
 		if (decodeResult < 0) throw std::exception("Decoder error: Failed to receive frame");
 
-		frameCompleteDelegate(&implementation->decodedFrame);
+		frameCompleteDelegate(implementation->decodedFrame);
 	}
 }
 
@@ -71,6 +71,11 @@ CodecParameters Decoder::GetAudioParameters() const
 		.SetChannelCount(implementation->codec.GetChannelCount())
 		.SetSampleFormat(implementation->codec.GetSampleFormat())
 		.SetTimeBase(implementation->codec.GetTimeBase());
+}
+
+const Codec& Decoder::GetCodec() const
+{
+	return implementation->codec;
 }
 
 CodecParameters Decoder::GetVideoParameters() const
@@ -96,11 +101,6 @@ bool Decoder::IsValid() const
 {
 	return implementation->codec.IsValid() && implementation->decodedFrame.IsValid();
 }
-
-//const Codec& Decoder::GetCodec() const
-//{
-//	return implementation->codec;
-//}
 
 void Decoder::Open(CodecParameters* codecParameters)
 {

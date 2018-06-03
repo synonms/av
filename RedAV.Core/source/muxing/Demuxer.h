@@ -19,7 +19,7 @@ namespace redav
 			~Demuxer();
 
 			void Close();
-			void DecodePackets(enumerators::MediaType mediaType, const std::function<void(media::Frame*)>& frameDecodedFunc);
+			void DecodePackets(enumerators::MediaType mediaType, const std::function<void(const media::Frame&)>& frameDecodedFunc);
 			encoding::Decoder& GetAudioDecoder() const;
 			encoding::Decoder& GetVideoDecoder() const;
 			bool IsValid() const;

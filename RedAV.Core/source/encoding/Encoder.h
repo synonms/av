@@ -7,8 +7,10 @@
 #include <enumerators\CodecType.h>
 #include <media\Frame.h>
 #include <media\Packet.h>
+#include <utilities\AudioBuffer.h>
 #include <utilities\Dictionary.h>
 #include <utilities\RationalNumber.h>
+#include <utilities\Resampler.h>
 
 namespace redav
 {
@@ -20,7 +22,7 @@ namespace redav
 			Encoder();
 			~Encoder();
 
-			void EncodeFrame(media::Frame* frame, const std::function<void(media::Packet*)>& packetCompleteDelegate);
+			void EncodeAudio(const utilities::AudioBuffer& buffer, const std::function<void(const media::Packet&)>& packetCompleteDelegate);
 			Codec& GetCodec() const;
 			void Initialise(enumerators::CodecType codecType);
 			void Open(utilities::Dictionary* options);

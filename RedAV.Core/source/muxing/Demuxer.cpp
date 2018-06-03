@@ -3,6 +3,7 @@
 extern "C"
 {
 #include <libavformat/avformat.h>
+#include <libavutil/error.h>
 }
 
 #include <iostream>
@@ -118,24 +119,33 @@ void Demuxer::Open(const std::string& filePath)
 	std::cout << "Demuxer: Initialised" << std::endl;
 }
 
-void Demuxer::DecodePackets(MediaType mediaType, const std::function<void(Frame*)>& frameDecodedFunc)
+void Demuxer::DecodePackets(MediaType mediaType, const std::function<void(const Frame&)>& frameDecodedFunc)
 {
-	AVPacket avPacket;
-	Packet packet(&avPacket);
+	Packet packet;
+	int error;
 
-	while (av_read_frame(implementation->formatContext, packet.GetPacket()) >= 0)
+	while ((error = av_read_frame(implementation->formatContext, packet.GetAVPacket())) >= 0)
 	{
-		switch (implementation->formatContext->streams[packet.GetPacket()->stream_index]->codecpar->codec_type)
+		switch (implementation->formatContext->streams[packet.GetAVPacket()->stream_index]->codecpar->codec_type)
 		{
 		case AVMEDIA_TYPE_AUDIO:
-			if (mediaType == MediaType::Audio || mediaType == MediaType::AudioAndVideo) implementation->audioDecoder.DecodePacket(&packet, [&frameDecodedFunc](Frame* frame) { frameDecodedFunc(frame); });
+			if (mediaType == MediaType::Audio || mediaType == MediaType::AudioAndVideo) implementation->audioDecoder.DecodePacket(packet, [&frameDecodedFunc](const Frame& frame) { frameDecodedFunc(frame); });
 			break;
 		case AVMEDIA_TYPE_VIDEO:
-			if (mediaType == MediaType::Video || mediaType == MediaType::AudioAndVideo) implementation->videoDecoder.DecodePacket(&packet, [&frameDecodedFunc](Frame* frame) { frameDecodedFunc(frame); });
+			if (mediaType == MediaType::Video || mediaType == MediaType::AudioAndVideo) implementation->videoDecoder.DecodePacket(packet, [&frameDecodedFunc](const Frame& frame) { frameDecodedFunc(frame); });
 			break;
 		default:
 			break;
 		}
+	}
+
+	if (error == AVERROR_EOF)
+	{
+		// TODO - At the end of the file, flush the decoder
+	}
+	else 
+	{
+		throw new std::exception("Demuxer: Error decoding packet");
 	}
 }
 
