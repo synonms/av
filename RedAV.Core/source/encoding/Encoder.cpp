@@ -13,6 +13,8 @@ extern "C"
 #include <media/Stream.h>
 #include <utilities/Resampler.h>
 
+#include <iostream>
+
 using namespace redav::encoding;
 using namespace redav::enumerators;
 using namespace redav::media;
@@ -28,7 +30,7 @@ public:
 	CodecType codecType{ CodecType::Unknown };
 	Codec codec;
 	Frame encodedFrame;
-	int64_t timestamp{0};
+	int noOfSamplesEncoded{0};
 
 	void OpenAudio(Dictionary* options)
 	{
@@ -38,7 +40,7 @@ public:
 
 		codec.Open(optionsCopy);
 
-		encodedFrame.InitialiseForAudio(codec);
+		encodedFrame.InitialiseForAudio(codec, codec.GetFrameSize());
 	}
 
 	void OpenVideo(Dictionary* options)
@@ -56,22 +58,16 @@ Encoder::~Encoder()
 {
 }
 
-void Encoder::EncodeAudio(const AudioBuffer& buffer, const std::function<void(const Packet&)>& packetCompleteDelegate)
+void Encoder::EncodeAudio(Frame& outputFrame, const std::function<void(const Packet&)>& packetCompleteDelegate)
 {
-	// Temporary storage of the output samples of the frame written to the file.
-	Frame tempFrame;
-	tempFrame.InitialiseForAudio(implementation->codec);
-
-	// Read as many samples from the FIFO buffer as required to fill the frame.
-	// The samples are stored in the frame temporarily.
-	buffer.ReadSamples(tempFrame);
+//	std::cout << "o->Encoder::EncodeAudio()" << std::endl;
 
 	// Set a timestamp based on the sample rate for the container.
-	tempFrame.SetPresentationTimestamp(implementation->timestamp);
-	implementation->timestamp += tempFrame.GetNoOfSamples();
+	outputFrame.SetPresentationTimestamp(av_rescale_q(implementation->noOfSamplesEncoded, RationalNumber(1, implementation->codec.GetSampleRate()).GetAVRational(), implementation->codec.GetTimeBase().GetAVRational()));
+	implementation->noOfSamplesEncoded += outputFrame.GetNoOfSamples();
 
 	// Send the frame with the uncompressed data to the encoder
-	auto encodeResult = avcodec_send_frame(implementation->codec.GetCodecContext(), tempFrame.GetAVFrame());
+	auto encodeResult = avcodec_send_frame(implementation->codec.GetCodecContext(), outputFrame.GetAVFrame());
 
 	if (encodeResult < 0) throw std::exception("Encoder error: Failed to send the frame");
 
@@ -87,6 +83,10 @@ void Encoder::EncodeAudio(const AudioBuffer& buffer, const std::function<void(co
 
 		if (encodeResult == AVERROR(EINVAL)) throw std::exception("Encoder error: Codec not opened");
 		if (encodeResult < 0) throw std::exception("Encoder error: Failed to receive packet");
+
+		// TODO - Set packet info?
+//		outputPacket.pts = av_rescale_q_rnd(pkt.pts, audio_codec_context->time_base, audio_stream->time_base, AVRounding(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
+//		outputPacket.stream_index = audio_stream->id;
 
 		packetCompleteDelegate(outputPacket);
 	}

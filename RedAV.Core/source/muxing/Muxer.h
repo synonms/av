@@ -6,7 +6,6 @@
 #include <encoding/CodecParameters.h>
 #include <encoding/Encoder.h>
 #include <media/Frame.h>
-#include <utilities/Resampler.h>
 
 namespace redav
 {
@@ -18,11 +17,12 @@ namespace redav
 			Muxer();
 			~Muxer();
 
+			void AddToBuffer(const media::Frame& frame);
 			void Close();
 			const encoding::Encoder& GetAudioEncoder() const;
 			bool IsValid() const;
 			void Open(const std::string& filePath, encoding::CodecParameters* audioParameters, encoding::CodecParameters* videoParameters);
-			void WriteAudioFrame(const media::Frame& frame, bool isFinished = false, utilities::Resampler* resampler = nullptr);
+			void WriteBuffer();
 
 		private:
 			class Implementation;

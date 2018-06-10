@@ -19,10 +19,10 @@ namespace redav
 			AudioBuffer();
 			~AudioBuffer();
 
-			void AddSamples(uint8_t** samples, int noOfSamples);
+			int AddSamples(uint8_t** samples, int noOfSamples);
 			int GetSize() const;
 			void Initialise(enumerators::SampleFormat sampleFormat, int channelCount);
-			void ReadSamples(media::Frame& outputFrame) const;
+			int ReadSamples(media::Frame& outputFrame, int frameSize) const;
 
 		public: //Internal
 			AVAudioFifo* GetAVAudioFifo() const;

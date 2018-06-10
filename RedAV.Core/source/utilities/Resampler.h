@@ -17,7 +17,8 @@ namespace redav
 			Resampler();
 			~Resampler();
 
-			void Convert(const media::Frame& inputFrame, uint8_t* outputBuffer);
+			media::Frame Convert(const media::Frame& inputFrame);
+			int Flush(const media::Frame& resampledFrame);
 			void Initialise(const encoding::Codec& inCodec, const encoding::Codec& outCodec);
 
 		public: //Internal

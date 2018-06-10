@@ -5,6 +5,8 @@ extern "C"
 #include <libavutil/audio_fifo.h>
 }
 
+#include <iostream>
+
 using namespace redav::enumerators;
 using namespace redav::media;
 using namespace redav::utilities;
@@ -29,13 +31,17 @@ AudioBuffer::~AudioBuffer()
 
 }
 
-void AudioBuffer::AddSamples(uint8_t** samples, int noOfSamples)
+int AudioBuffer::AddSamples(uint8_t** samples, int noOfSamples)
 {
-	// Make the FIFO as large as it needs to be to hold both, the old and the new samples.
-	if (av_audio_fifo_realloc(implementation->audioFifo, av_audio_fifo_size(implementation->audioFifo) + noOfSamples) < 0) throw std::exception("AudioBuffer: Failed to resize audio buffer");
+//	std::cout << "o-> AudioBuffer::AddSamples - Pre-alloc FIFO size " << GetSize() << std::endl;
+
+	// Make the FIFO as large as it needs to be to hold both the old and the new samples.
+	if (av_audio_fifo_realloc(implementation->audioFifo, GetSize() + noOfSamples) < 0) throw std::exception("AudioBuffer: Failed to resize audio buffer");
+
+//	std::cout << "AudioBuffer: Post-alloc FIFO size " << GetSize() << std::endl;
 
 	// Store the new samples in the FIFO buffer.
-	if (av_audio_fifo_write(implementation->audioFifo, (void**)samples, noOfSamples) < noOfSamples) throw new std::exception("AudioBuffer: Failed to store samples");
+	return av_audio_fifo_write(implementation->audioFifo, (void**)samples, noOfSamples);
 }
 
 int AudioBuffer::GetSize() const
@@ -50,9 +56,11 @@ void AudioBuffer::Initialise(SampleFormat sampleFormat, int channelCount)
 	if (implementation->audioFifo == nullptr) throw std::exception("AudioBuffer: Failed to allocate audio buffer");
 }
 
-void AudioBuffer::ReadSamples(Frame& outputFrame) const
+int AudioBuffer::ReadSamples(Frame& outputFrame, int frameSize) const
 {
-	if (av_audio_fifo_read(implementation->audioFifo, (void **)outputFrame.GetData(), outputFrame.GetNoOfSamples()) < outputFrame.GetNoOfSamples()) throw std::exception("AudioBuffer: Failed to read samples");
+//	std::cout << "o-> AudioBuffer::ReadSamples - Reading " << noOfSamplesToRead << " samples of " << GetSize() << "..." << std::endl;
+
+	return av_audio_fifo_read(implementation->audioFifo, (void**)outputFrame.GetData(), frameSize);
 }
 
 AVAudioFifo* AudioBuffer::GetAVAudioFifo() const

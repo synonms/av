@@ -5,6 +5,8 @@ extern "C"
 #include <libavformat/avformat.h>
 }
 
+#include <iostream>
+
 using namespace redav::encoding;
 using namespace redav::enumerators;
 using namespace redav::media;
@@ -28,9 +30,25 @@ Frame::Frame()
 	implementation = std::make_unique<Implementation>();
 }
 
+Frame::Frame(Frame&& other) noexcept
+{
+	implementation = std::move(other.implementation);
+}
+
 Frame::~Frame()
 {
+	if (implementation != nullptr && implementation->frame != nullptr) av_frame_free(&implementation->frame);
+}
+
+Frame& Frame::operator=(Frame&& other) noexcept
+{
 	if (implementation->frame != nullptr) av_frame_free(&implementation->frame);
+
+	implementation = std::move(other.implementation);
+
+	other.implementation = nullptr;
+
+	return *this;
 }
 
 AVFrame* Frame::GetAVFrame() const
@@ -38,9 +56,9 @@ AVFrame* Frame::GetAVFrame() const
 	return implementation->frame;
 }
 
-uint8_t* Frame::GetData() const
+uint8_t** Frame::GetData() const
 {
-	return implementation->frame->data[0];
+	return implementation->frame->data;
 }
 
 uint8_t** Frame::GetExtendedData() const
@@ -68,12 +86,16 @@ RationalNumber Frame::GetTimeBase() const
 	return implementation->timeBase;
 }
 
-void Frame::InitialiseForAudio(const Codec& codec)
+void Frame::InitialiseForAudio(const Codec& codec, int noOfSamples)
 {
+//	std::cout << "Frame::InitialiseForAudio()" << std::endl;
+
 	implementation->frame->format = SampleFormatMapper::ToFfmpeg(codec.GetSampleFormat());
 	implementation->frame->channel_layout = codec.GetAudioChannelLayout();
 	implementation->frame->sample_rate = codec.GetSampleRate();
-	implementation->frame->nb_samples = codec.GetNoOfSamples();
+	implementation->frame->nb_samples = noOfSamples;
+
+//	std::cout << "nb_samples: " << implementation->frame->nb_samples << std::endl;
 
 	if (implementation->frame->nb_samples > 0) {
 		if (av_frame_get_buffer(implementation->frame, 0) < 0) throw std::exception("Could not allocate audio buffer");
@@ -94,6 +116,13 @@ bool Frame::IsValid() const
 	return implementation->frame != nullptr;
 }
 
+Frame& Frame::SetChannelLayout(uint64_t value)
+{
+	implementation->frame->channel_layout = value;
+
+	return *this;
+}
+
 Frame& Frame::SetMediaType(MediaType mediaType)
 {
 	implementation->mediaType = mediaType;
@@ -101,9 +130,30 @@ Frame& Frame::SetMediaType(MediaType mediaType)
 	return *this;
 }
 
+Frame& Frame::SetNoOfSamples(int value)
+{
+	implementation->frame->nb_samples = value;
+
+	return *this;
+}
+
 Frame& Frame::SetPresentationTimestamp(uint64_t value)
 {
 	implementation->frame->pts = value;
+
+	return *this;
+}
+
+Frame& Frame::SetSampleFormat(SampleFormat value)
+{
+	implementation->frame->format = SampleFormatMapper::ToFfmpeg(value);
+
+	return *this;
+}
+
+Frame& Frame::SetSampleRate(int value)
+{
+	implementation->frame->sample_rate = value;
 
 	return *this;
 }
