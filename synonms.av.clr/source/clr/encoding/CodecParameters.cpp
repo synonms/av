@@ -7,12 +7,12 @@ using namespace Synonms::Av::Clr::Utilities;
 
 CodecParameters::CodecParameters()
 {
-	_codecParameters = new redav::encoding::CodecParameters();
+	_codecParameters = new synonms::av::encoding::CodecParameters();
 }
 
-CodecParameters::CodecParameters(const redav::encoding::CodecParameters& codecParameters)
+CodecParameters::CodecParameters(const synonms::av::encoding::CodecParameters& codecParameters)
 {
-	_codecParameters = new redav::encoding::CodecParameters(codecParameters);
+	_codecParameters = new synonms::av::encoding::CodecParameters(codecParameters);
 }
 
 CodecParameters::~CodecParameters()
@@ -25,7 +25,7 @@ CodecParameters::!CodecParameters()
 	delete _codecParameters;
 }
 
-redav::encoding::CodecParameters* CodecParameters::GetCoreCodecParameters()
+synonms::av::encoding::CodecParameters* CodecParameters::GetCoreCodecParameters()
 {
 	return _codecParameters;
 }
@@ -113,7 +113,7 @@ CodecParameters^ CodecParameters::SetAudioChannelLayout(UInt64 value)
 
 CodecParameters^ CodecParameters::SetCodecType(CodecType value)
 {
-	_codecParameters->SetCodecType(static_cast<redav::enumerators::CodecType>(value));
+	_codecParameters->SetCodecType(static_cast<synonms::av::enumerators::CodecType>(value));
 
 	return this;
 }
@@ -127,14 +127,14 @@ CodecParameters^ CodecParameters::SetHeight(int value)
 
 CodecParameters^ CodecParameters::SetMediaType(MediaType value)
 {
-	_codecParameters->SetMediaType(static_cast<redav::enumerators::MediaType>(value));
+	_codecParameters->SetMediaType(static_cast<synonms::av::enumerators::MediaType>(value));
 
 	return this;
 }
 
 CodecParameters^ CodecParameters::SetPixelFormat(PixelFormat value)
 {
-	_codecParameters->SetPixelFormat(static_cast<redav::enumerators::PixelFormat>(value));
+	_codecParameters->SetPixelFormat(static_cast<synonms::av::enumerators::PixelFormat>(value));
 
 	return this;
 }
@@ -148,7 +148,7 @@ CodecParameters^ CodecParameters::SetSampleAspectRatio(RationalNumber^ value)
 
 CodecParameters^ CodecParameters::SetSampleFormat(SampleFormat value)
 {
-	_codecParameters->SetSampleFormat(static_cast<redav::enumerators::SampleFormat>(value));
+	_codecParameters->SetSampleFormat(static_cast<synonms::av::enumerators::SampleFormat>(value));
 
 	return this;
 }

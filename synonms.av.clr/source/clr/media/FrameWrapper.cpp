@@ -3,18 +3,18 @@
 using namespace Synonms::Av::Clr::Enumerators;
 using namespace Synonms::Av::Clr::Media;
 
-FrameWrapper::FrameWrapper(redav::media::Frame* frame)
+FrameWrapper::FrameWrapper(synonms::av::media::Frame* frame)
 	: _frame(frame)
 {
 }
 
-FrameWrapper::FrameWrapper(redav::media::Frame&& frame)
+FrameWrapper::FrameWrapper(synonms::av::media::Frame&& frame)
 {
-	_frame = new redav::media::Frame(std::move(frame));
+	_frame = new synonms::av::media::Frame(std::move(frame));
 }
 
 
-redav::media::Frame* FrameWrapper::GetFrame()
+synonms::av::media::Frame* FrameWrapper::GetFrame()
 {
 	return _frame;
 }

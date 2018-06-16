@@ -2,12 +2,12 @@
 
 using namespace Synonms::Av::Clr::Utilities;
 
-AudioBufferWrapper::AudioBufferWrapper(redav::utilities::AudioBuffer* audioBuffer)
+AudioBufferWrapper::AudioBufferWrapper(synonms::av::utilities::AudioBuffer* audioBuffer)
 	: _audioBuffer(audioBuffer)
 {
 }
 
-redav::utilities::AudioBuffer* AudioBufferWrapper::GetCoreAudioBuffer()
+synonms::av::utilities::AudioBuffer* AudioBufferWrapper::GetCoreAudioBuffer()
 {
 	return _audioBuffer;
 }

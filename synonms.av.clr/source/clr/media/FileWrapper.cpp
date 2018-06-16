@@ -2,12 +2,12 @@
 
 using namespace Synonms::Av::Clr::Media;
 
-FileWrapper::FileWrapper(redav::media::File* file)
+FileWrapper::FileWrapper(synonms::av::media::File* file)
 	: _file(file)
 {
 }
 
-redav::media::File* FileWrapper::GetCoreFile()
+synonms::av::media::File* FileWrapper::GetCoreFile()
 {
 	return _file;
 }

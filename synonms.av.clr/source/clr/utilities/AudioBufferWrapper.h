@@ -1,6 +1,6 @@
 #pragma once
 
-#include <utilities\AudioBuffer.h>
+#include <core\utilities\AudioBuffer.h>
 
 namespace Synonms
 {
@@ -13,12 +13,12 @@ namespace Synonms
 				public ref class AudioBufferWrapper
 				{
 				internal:
-					AudioBufferWrapper(redav::utilities::AudioBuffer* audioBuffer);
+					AudioBufferWrapper(synonms::av::utilities::AudioBuffer* audioBuffer);
 
-					redav::utilities::AudioBuffer* GetCoreAudioBuffer();
+					synonms::av::utilities::AudioBuffer* GetCoreAudioBuffer();
 
 				private:
-					redav::utilities::AudioBuffer* _audioBuffer;
+					synonms::av::utilities::AudioBuffer* _audioBuffer;
 				};
 			}
 		}

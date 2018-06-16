@@ -1,6 +1,6 @@
 #pragma once
 
-#include <encoding\Decoder.h>
+#include <core\encoding\Decoder.h>
 
 #include <clr\encoding\CodecParameters.h>
 #include <clr\encoding\CodecWrapper.h>
@@ -20,12 +20,12 @@ namespace Synonms
 					CodecWrapper^ GetCodec();
 
 				internal:
-					DecoderWrapper(redav::encoding::Decoder* decoder);
+					DecoderWrapper(synonms::av::encoding::Decoder* decoder);
 
-					redav::encoding::Decoder* GetCoreDecoder();
+					synonms::av::encoding::Decoder* GetCoreDecoder();
 
 				private:
-					redav::encoding::Decoder* _decoder;
+					synonms::av::encoding::Decoder* _decoder;
 				};
 			}
 		}

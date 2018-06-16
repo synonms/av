@@ -2,12 +2,12 @@
 
 using namespace Synonms::Av::Clr::Media;
 
-PacketWrapper::PacketWrapper(redav::media::Packet* packet)
+PacketWrapper::PacketWrapper(synonms::av::media::Packet* packet)
 	: _packet(packet)
 {
 }
 
-redav::media::Packet* PacketWrapper::GetCorePacket()
+synonms::av::media::Packet* PacketWrapper::GetCorePacket()
 {
 	return _packet;
 }

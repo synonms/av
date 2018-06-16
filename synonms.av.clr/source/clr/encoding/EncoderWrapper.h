@@ -1,6 +1,6 @@
 #pragma once
 
-#include <encoding\Encoder.h>
+#include <core\encoding\Encoder.h>
 
 #include <clr\encoding\CodecWrapper.h>
 
@@ -18,12 +18,12 @@ namespace Synonms
 					CodecWrapper^ GetCodec();
 
 				internal:
-					EncoderWrapper(redav::encoding::Encoder* encoder);
+					EncoderWrapper(synonms::av::encoding::Encoder* encoder);
 
-					redav::encoding::Encoder* GetCoreEncoder();
+					synonms::av::encoding::Encoder* GetCoreEncoder();
 
 				private:
-					redav::encoding::Encoder* _encoder;
+					synonms::av::encoding::Encoder* _encoder;
 				};
 			}
 		}

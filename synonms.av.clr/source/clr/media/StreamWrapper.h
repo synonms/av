@@ -1,6 +1,6 @@
 #pragma once
 
-#include <media\Stream.h>
+#include <core\media\Stream.h>
 
 namespace Synonms
 {
@@ -13,12 +13,12 @@ namespace Synonms
 				public ref class StreamWrapper
 				{
 				internal:
-					StreamWrapper(redav::media::Stream* stream);
+					StreamWrapper(synonms::av::media::Stream* stream);
 
-					redav::media::Stream* GetCoreStream();
+					synonms::av::media::Stream* GetCoreStream();
 
 				private:
-					redav::media::Stream* _stream;
+					synonms::av::media::Stream* _stream;
 				};
 			}
 		}

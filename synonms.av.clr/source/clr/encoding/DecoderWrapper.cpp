@@ -2,12 +2,12 @@
 
 using namespace Synonms::Av::Clr::Encoding;
 
-DecoderWrapper::DecoderWrapper(redav::encoding::Decoder* decoder)
+DecoderWrapper::DecoderWrapper(synonms::av::encoding::Decoder* decoder)
 	: _decoder(decoder)
 {
 }
 
-redav::encoding::Decoder* DecoderWrapper::GetCoreDecoder()
+synonms::av::encoding::Decoder* DecoderWrapper::GetCoreDecoder()
 {
 	return _decoder;
 }
@@ -19,5 +19,5 @@ CodecParameters^ DecoderWrapper::GetAudioParameters()
 
 CodecWrapper^ DecoderWrapper::GetCodec()
 {
-	return gcnew CodecWrapper(const_cast<redav::encoding::Codec*>(&_decoder->GetCodec()));
+	return gcnew CodecWrapper(const_cast<synonms::av::encoding::Codec*>(&_decoder->GetCodec()));
 }

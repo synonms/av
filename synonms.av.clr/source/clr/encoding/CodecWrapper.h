@@ -1,6 +1,6 @@
 #pragma once
 
-#include <encoding\Codec.h>
+#include <core\encoding\Codec.h>
 
 namespace Synonms
 {
@@ -13,12 +13,12 @@ namespace Synonms
 				public ref class CodecWrapper
 				{
 				internal:
-					CodecWrapper(redav::encoding::Codec* codec);
+					CodecWrapper(synonms::av::encoding::Codec* codec);
 
-					redav::encoding::Codec* GetCoreCodec();
+					synonms::av::encoding::Codec* GetCoreCodec();
 
 				private:
-					redav::encoding::Codec* _codec;
+					synonms::av::encoding::Codec* _codec;
 				};
 			}
 		}

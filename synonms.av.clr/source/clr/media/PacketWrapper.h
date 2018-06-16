@@ -1,6 +1,6 @@
 #pragma once
 
-#include <media\Packet.h>
+#include <core\media\Packet.h>
 
 namespace Synonms
 {
@@ -13,12 +13,12 @@ namespace Synonms
 				public ref class PacketWrapper
 				{
 				internal:
-					PacketWrapper(redav::media::Packet* packet);
+					PacketWrapper(synonms::av::media::Packet* packet);
 
-					redav::media::Packet* GetCorePacket();
+					synonms::av::media::Packet* GetCorePacket();
 
 				private:
-					redav::media::Packet* _packet;
+					synonms::av::media::Packet* _packet;
 				};
 			}
 		}

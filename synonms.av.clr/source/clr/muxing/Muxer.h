@@ -1,6 +1,6 @@
 #pragma once
 
-#include <muxing\Muxer.h>
+#include <core\muxing\Muxer.h>
 
 #include <clr\encoding\CodecParameters.h>
 #include <clr\encoding\EncoderWrapper.h>
@@ -29,7 +29,7 @@ namespace Synonms
 					void WriteBuffer();
 
 				private:
-					redav::muxing::Muxer* _muxer;
+					synonms::av::muxing::Muxer* _muxer;
 				};
 			}
 		}

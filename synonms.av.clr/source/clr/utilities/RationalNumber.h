@@ -1,6 +1,6 @@
 #pragma once
 
-#include <utilities\RationalNumber.h>
+#include <core\utilities\RationalNumber.h>
 
 namespace Synonms
 {
@@ -16,9 +16,9 @@ namespace Synonms
 					RationalNumber(int numerator, int denominator);
 
 				internal:
-					RationalNumber(const redav::utilities::RationalNumber& rationalNumber);
+					RationalNumber(const synonms::av::utilities::RationalNumber& rationalNumber);
 
-					redav::utilities::RationalNumber GetCoreRationalNumber();
+					synonms::av::utilities::RationalNumber GetCoreRationalNumber();
 
 				private:
 					int _numerator;

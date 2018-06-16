@@ -10,7 +10,7 @@ using namespace Synonms::Av::Clr::Utilities;
 
 Muxer::Muxer()
 {
-	_muxer = new redav::muxing::Muxer();
+	_muxer = new synonms::av::muxing::Muxer();
 }
 
 Muxer::~Muxer()
@@ -35,12 +35,12 @@ void Muxer::Close()
 
 EncoderWrapper^ Muxer::GetAudioEncoder()
 {
-	return gcnew EncoderWrapper(const_cast<redav::encoding::Encoder*>(&_muxer->GetAudioEncoder()));
+	return gcnew EncoderWrapper(const_cast<synonms::av::encoding::Encoder*>(&_muxer->GetAudioEncoder()));
 }
 
 EncoderWrapper^ Muxer::GetVideoEncoder()
 {
-	return gcnew EncoderWrapper(const_cast<redav::encoding::Encoder*>(&_muxer->GetVideoEncoder()));
+	return gcnew EncoderWrapper(const_cast<synonms::av::encoding::Encoder*>(&_muxer->GetVideoEncoder()));
 }
 
 void Muxer::Open(String^ filePath, CodecParameters^ audioParameters, CodecParameters^ videoParameters)

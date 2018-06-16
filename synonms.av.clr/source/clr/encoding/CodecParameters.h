@@ -1,6 +1,6 @@
 #pragma once
 
-#include <encoding\CodecParameters.h>
+#include <core\encoding\CodecParameters.h>
 
 #include <clr\enumerators\CodecType.h>
 #include <clr\enumerators\MediaType.h>
@@ -49,12 +49,12 @@ namespace Synonms
 					CodecParameters^ SetWidth(int value);
 
 				internal:
-					CodecParameters(const redav::encoding::CodecParameters& codecParameters);
+					CodecParameters(const synonms::av::encoding::CodecParameters& codecParameters);
 
-					redav::encoding::CodecParameters* GetCoreCodecParameters();
+					synonms::av::encoding::CodecParameters* GetCoreCodecParameters();
 
 				private:
-					redav::encoding::CodecParameters* _codecParameters;
+					synonms::av::encoding::CodecParameters* _codecParameters;
 				};
 			}
 		}

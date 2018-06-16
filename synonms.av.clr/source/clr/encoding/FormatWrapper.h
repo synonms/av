@@ -1,6 +1,6 @@
 #pragma once
 
-#include <encoding\Format.h>
+#include <core\encoding\Format.h>
 
 namespace Synonms
 {
@@ -13,12 +13,12 @@ namespace Synonms
 				public ref class FormatWrapper
 				{
 				internal:
-					FormatWrapper(redav::encoding::Format* format);
+					FormatWrapper(synonms::av::encoding::Format* format);
 
-					redav::encoding::Format* GetCoreFormat();
+					synonms::av::encoding::Format* GetCoreFormat();
 
 				private:
-					redav::encoding::Format* _format;
+					synonms::av::encoding::Format* _format;
 				};
 			}
 		}

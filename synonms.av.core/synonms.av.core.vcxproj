@@ -19,46 +19,46 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\encoding\Codec.h" />
-    <ClInclude Include="source\encoding\CodecParameters.h" />
-    <ClInclude Include="source\encoding\Decoder.h" />
-    <ClInclude Include="source\encoding\Encoder.h" />
-    <ClInclude Include="source\encoding\Format.h" />
-    <ClInclude Include="source\enumerators\CodecType.h" />
-    <ClInclude Include="source\enumerators\MediaType.h" />
-    <ClInclude Include="source\enumerators\PixelFormat.h" />
-    <ClInclude Include="source\enumerators\SampleFormat.h" />
-    <ClInclude Include="source\media\File.h" />
-    <ClInclude Include="source\media\Frame.h" />
-    <ClInclude Include="source\media\Packet.h" />
-    <ClInclude Include="source\media\Stream.h" />
-    <ClInclude Include="source\muxing\Demuxer.h" />
-    <ClInclude Include="source\muxing\Muxer.h" />
-    <ClInclude Include="source\utilities\AudioBuffer.h" />
-    <ClInclude Include="source\utilities\Dictionary.h" />
-    <ClInclude Include="source\utilities\RationalNumber.h" />
-    <ClInclude Include="source\utilities\Resampler.h" />
+    <ClInclude Include="source\core\encoding\Codec.h" />
+    <ClInclude Include="source\core\encoding\CodecParameters.h" />
+    <ClInclude Include="source\core\encoding\Decoder.h" />
+    <ClInclude Include="source\core\encoding\Encoder.h" />
+    <ClInclude Include="source\core\encoding\Format.h" />
+    <ClInclude Include="source\core\enumerators\CodecType.h" />
+    <ClInclude Include="source\core\enumerators\MediaType.h" />
+    <ClInclude Include="source\core\enumerators\PixelFormat.h" />
+    <ClInclude Include="source\core\enumerators\SampleFormat.h" />
+    <ClInclude Include="source\core\media\File.h" />
+    <ClInclude Include="source\core\media\Frame.h" />
+    <ClInclude Include="source\core\media\Packet.h" />
+    <ClInclude Include="source\core\media\Stream.h" />
+    <ClInclude Include="source\core\muxing\Demuxer.h" />
+    <ClInclude Include="source\core\muxing\Muxer.h" />
+    <ClInclude Include="source\core\utilities\AudioBuffer.h" />
+    <ClInclude Include="source\core\utilities\Dictionary.h" />
+    <ClInclude Include="source\core\utilities\RationalNumber.h" />
+    <ClInclude Include="source\core\utilities\Resampler.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\encoding\Codec.cpp" />
-    <ClCompile Include="source\encoding\CodecParameters.cpp" />
-    <ClCompile Include="source\encoding\Decoder.cpp" />
-    <ClCompile Include="source\encoding\Encoder.cpp" />
-    <ClCompile Include="source\encoding\Format.cpp" />
-    <ClCompile Include="source\enumerators\CodecType.cpp" />
-    <ClCompile Include="source\enumerators\MediaType.cpp" />
-    <ClCompile Include="source\enumerators\PixelFormat.cpp" />
-    <ClCompile Include="source\enumerators\SampleFormat.cpp" />
-    <ClCompile Include="source\media\File.cpp" />
-    <ClCompile Include="source\media\Frame.cpp" />
-    <ClCompile Include="source\media\Packet.cpp" />
-    <ClCompile Include="source\media\Stream.cpp" />
-    <ClCompile Include="source\muxing\Demuxer.cpp" />
-    <ClCompile Include="source\muxing\Muxer.cpp" />
-    <ClCompile Include="source\utilities\AudioBuffer.cpp" />
-    <ClCompile Include="source\utilities\Dictionary.cpp" />
-    <ClCompile Include="source\utilities\RationalNumber.cpp" />
-    <ClCompile Include="source\utilities\Resampler.cpp" />
+    <ClCompile Include="source\core\encoding\Codec.cpp" />
+    <ClCompile Include="source\core\encoding\CodecParameters.cpp" />
+    <ClCompile Include="source\core\encoding\Decoder.cpp" />
+    <ClCompile Include="source\core\encoding\Encoder.cpp" />
+    <ClCompile Include="source\core\encoding\Format.cpp" />
+    <ClCompile Include="source\core\enumerators\CodecType.cpp" />
+    <ClCompile Include="source\core\enumerators\MediaType.cpp" />
+    <ClCompile Include="source\core\enumerators\PixelFormat.cpp" />
+    <ClCompile Include="source\core\enumerators\SampleFormat.cpp" />
+    <ClCompile Include="source\core\media\File.cpp" />
+    <ClCompile Include="source\core\media\Frame.cpp" />
+    <ClCompile Include="source\core\media\Packet.cpp" />
+    <ClCompile Include="source\core\media\Stream.cpp" />
+    <ClCompile Include="source\core\muxing\Demuxer.cpp" />
+    <ClCompile Include="source\core\muxing\Muxer.cpp" />
+    <ClCompile Include="source\core\utilities\AudioBuffer.cpp" />
+    <ClCompile Include="source\core\utilities\Dictionary.cpp" />
+    <ClCompile Include="source\core\utilities\RationalNumber.cpp" />
+    <ClCompile Include="source\core\utilities\Resampler.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

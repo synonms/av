@@ -2,12 +2,12 @@
 
 using namespace Synonms::Av::Clr::Utilities;
 
-DictionaryWrapper::DictionaryWrapper(redav::utilities::Dictionary* dictionary)
+DictionaryWrapper::DictionaryWrapper(synonms::av::utilities::Dictionary* dictionary)
 	: _dictionary(dictionary)
 {
 }
 
-redav::utilities::Dictionary* DictionaryWrapper::GetCoreDictionary()
+synonms::av::utilities::Dictionary* DictionaryWrapper::GetCoreDictionary()
 {
 	return _dictionary;
 }

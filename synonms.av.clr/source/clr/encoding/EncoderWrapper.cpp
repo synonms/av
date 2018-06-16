@@ -2,17 +2,17 @@
 
 using namespace Synonms::Av::Clr::Encoding;
 
-EncoderWrapper::EncoderWrapper(redav::encoding::Encoder* encoder)
+EncoderWrapper::EncoderWrapper(synonms::av::encoding::Encoder* encoder)
 	: _encoder(encoder)
 {
 }
 
-redav::encoding::Encoder* EncoderWrapper::GetCoreEncoder()
+synonms::av::encoding::Encoder* EncoderWrapper::GetCoreEncoder()
 {
 	return _encoder;
 }
 
 CodecWrapper^ EncoderWrapper::GetCodec()
 {
-	return gcnew CodecWrapper(const_cast<redav::encoding::Codec*>(&_encoder->GetCodec()));
+	return gcnew CodecWrapper(const_cast<synonms::av::encoding::Codec*>(&_encoder->GetCodec()));
 }

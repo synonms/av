@@ -2,12 +2,12 @@
 
 using namespace Synonms::Av::Clr::Encoding;
 
-CodecWrapper::CodecWrapper(redav::encoding::Codec* codec)
+CodecWrapper::CodecWrapper(synonms::av::encoding::Codec* codec)
 	: _codec(codec)
 {
 }
 
-redav::encoding::Codec* CodecWrapper::GetCoreCodec()
+synonms::av::encoding::Codec* CodecWrapper::GetCoreCodec()
 {
 	return _codec;
 }

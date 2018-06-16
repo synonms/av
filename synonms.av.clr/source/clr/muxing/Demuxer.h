@@ -1,6 +1,6 @@
 #pragma once
 
-#include <muxing\Demuxer.h>
+#include <core\muxing\Demuxer.h>
 
 #include <clr\encoding\DecoderWrapper.h>
 #include <clr\enumerators\MediaType.h>
@@ -30,10 +30,10 @@ namespace Synonms
 					void Open(System::String^ filePath);
 
 				private:
-					redav::muxing::Demuxer* _demuxer;
+					synonms::av::muxing::Demuxer* _demuxer;
 
-					delegate void FrameDecodedDelegate(const redav::media::Frame& frame);
-					void OnFrameDecoded(const redav::media::Frame& frame);
+					delegate void FrameDecodedDelegate(const synonms::av::media::Frame& frame);
+					void OnFrameDecoded(const synonms::av::media::Frame& frame);
 				};
 			}
 		}

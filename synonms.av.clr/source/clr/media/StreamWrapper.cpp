@@ -2,12 +2,12 @@
 
 using namespace Synonms::Av::Clr::Media;
 
-StreamWrapper::StreamWrapper(redav::media::Stream* stream)
+StreamWrapper::StreamWrapper(synonms::av::media::Stream* stream)
 	: _stream(stream)
 {	
 }
 
-redav::media::Stream* StreamWrapper::GetCoreStream()
+synonms::av::media::Stream* StreamWrapper::GetCoreStream()
 {
 	return _stream;
 }

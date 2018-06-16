@@ -1,6 +1,6 @@
 #pragma once
 
-#include <utilities\Dictionary.h>
+#include <core\utilities\Dictionary.h>
 
 namespace Synonms
 {
@@ -13,12 +13,12 @@ namespace Synonms
 				public ref class DictionaryWrapper
 				{
 				internal:
-					DictionaryWrapper(redav::utilities::Dictionary* dictionary);
+					DictionaryWrapper(synonms::av::utilities::Dictionary* dictionary);
 
-					redav::utilities::Dictionary* GetCoreDictionary();
+					synonms::av::utilities::Dictionary* GetCoreDictionary();
 
 				private:
-					redav::utilities::Dictionary* _dictionary;
+					synonms::av::utilities::Dictionary* _dictionary;
 				};
 			}
 		}

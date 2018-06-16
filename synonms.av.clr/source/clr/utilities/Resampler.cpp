@@ -6,7 +6,7 @@ using namespace Synonms::Av::Clr::Utilities;
 
 Resampler::Resampler()
 {
-	_resampler = new redav::utilities::Resampler();
+	_resampler = new synonms::av::utilities::Resampler();
 }
 
 Resampler::~Resampler()
@@ -19,7 +19,7 @@ Resampler::!Resampler()
 	delete _resampler;
 }
 
-redav::utilities::Resampler* Resampler::GetCoreResampler()
+synonms::av::utilities::Resampler* Resampler::GetCoreResampler()
 {
 	return _resampler;
 }

@@ -12,7 +12,7 @@ using namespace Synonms::Av::Clr::Utilities;
 
 Demuxer::Demuxer()
 {
-	_demuxer = new redav::muxing::Demuxer();
+	_demuxer = new synonms::av::muxing::Demuxer();
 }
 
 Demuxer::~Demuxer()
@@ -32,13 +32,13 @@ void Demuxer::Close()
 
 void Demuxer::DecodePackets(MediaType mediaType)
 {
-	typedef void(__stdcall * nativeFunction)(const redav::media::Frame&);
+	typedef void(__stdcall * nativeFunction)(const synonms::av::media::Frame&);
 
 	auto frameDecodedDelegate = gcnew FrameDecodedDelegate(this, &Demuxer::OnFrameDecoded);
 	auto delegatePointer = Marshal::GetFunctionPointerForDelegate(frameDecodedDelegate);
 	auto functionPointer = static_cast<nativeFunction>(delegatePointer.ToPointer());
 
-	_demuxer->DecodePackets(static_cast<redav::enumerators::MediaType>(mediaType), functionPointer);
+	_demuxer->DecodePackets(static_cast<synonms::av::enumerators::MediaType>(mediaType), functionPointer);
 }
 
 DecoderWrapper^ Demuxer::GetAudioDecoder()
@@ -56,9 +56,9 @@ void Demuxer::Open(String^ filePath)
 	_demuxer->Open(TypeHelper::ToNativeString(filePath));
 }
 
-void Demuxer::OnFrameDecoded(const redav::media::Frame& frame)
+void Demuxer::OnFrameDecoded(const synonms::av::media::Frame& frame)
 {
-	auto frameWrapper = gcnew FrameWrapper(const_cast<redav::media::Frame*>(&frame));
+	auto frameWrapper = gcnew FrameWrapper(const_cast<synonms::av::media::Frame*>(&frame));
 
 	FrameDecodedEvent(frameWrapper);
 }

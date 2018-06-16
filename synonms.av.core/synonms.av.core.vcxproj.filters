@@ -45,120 +45,120 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\encoding\Decoder.h">
+    <ClInclude Include="source\core\encoding\Decoder.h">
       <Filter>Header Files\Encoding</Filter>
     </ClInclude>
-    <ClInclude Include="source\enumerators\MediaType.h">
+    <ClInclude Include="source\core\enumerators\MediaType.h">
       <Filter>Header Files\Enumerators</Filter>
     </ClInclude>
-    <ClInclude Include="source\media\Stream.h">
+    <ClInclude Include="source\core\media\Stream.h">
       <Filter>Header Files\Media</Filter>
     </ClInclude>
-    <ClInclude Include="source\muxing\Demuxer.h">
+    <ClInclude Include="source\core\muxing\Demuxer.h">
       <Filter>Header Files\Muxing</Filter>
     </ClInclude>
-    <ClInclude Include="source\muxing\Muxer.h">
+    <ClInclude Include="source\core\muxing\Muxer.h">
       <Filter>Header Files\Muxing</Filter>
     </ClInclude>
-    <ClInclude Include="source\media\Packet.h">
+    <ClInclude Include="source\core\media\Packet.h">
       <Filter>Header Files\Media</Filter>
     </ClInclude>
-    <ClInclude Include="source\media\Frame.h">
+    <ClInclude Include="source\core\media\Frame.h">
       <Filter>Header Files\Media</Filter>
     </ClInclude>
-    <ClInclude Include="source\encoding\Encoder.h">
+    <ClInclude Include="source\core\encoding\Encoder.h">
       <Filter>Header Files\Encoding</Filter>
     </ClInclude>
-    <ClInclude Include="source\enumerators\CodecType.h">
+    <ClInclude Include="source\core\enumerators\CodecType.h">
       <Filter>Header Files\Enumerators</Filter>
     </ClInclude>
-    <ClInclude Include="source\utilities\RationalNumber.h">
+    <ClInclude Include="source\core\utilities\RationalNumber.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="source\encoding\Codec.h">
+    <ClInclude Include="source\core\encoding\Codec.h">
       <Filter>Header Files\Encoding</Filter>
     </ClInclude>
-    <ClInclude Include="source\enumerators\SampleFormat.h">
+    <ClInclude Include="source\core\enumerators\SampleFormat.h">
       <Filter>Header Files\Enumerators</Filter>
     </ClInclude>
-    <ClInclude Include="source\enumerators\PixelFormat.h">
+    <ClInclude Include="source\core\enumerators\PixelFormat.h">
       <Filter>Header Files\Enumerators</Filter>
     </ClInclude>
-    <ClInclude Include="source\encoding\CodecParameters.h">
+    <ClInclude Include="source\core\encoding\CodecParameters.h">
       <Filter>Header Files\Encoding</Filter>
     </ClInclude>
-    <ClInclude Include="source\utilities\Dictionary.h">
+    <ClInclude Include="source\core\utilities\Dictionary.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="source\encoding\Format.h">
+    <ClInclude Include="source\core\encoding\Format.h">
       <Filter>Header Files\Encoding</Filter>
     </ClInclude>
-    <ClInclude Include="source\media\File.h">
+    <ClInclude Include="source\core\media\File.h">
       <Filter>Header Files\Media</Filter>
     </ClInclude>
-    <ClInclude Include="source\utilities\Resampler.h">
+    <ClInclude Include="source\core\utilities\Resampler.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="source\utilities\AudioBuffer.h">
+    <ClInclude Include="source\core\utilities\AudioBuffer.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\encoding\Decoder.cpp">
+    <ClCompile Include="source\core\encoding\Decoder.cpp">
       <Filter>Source Files\Encoding</Filter>
     </ClCompile>
-    <ClCompile Include="source\media\Stream.cpp">
+    <ClCompile Include="source\core\media\Stream.cpp">
       <Filter>Source Files\Media</Filter>
     </ClCompile>
-    <ClCompile Include="source\muxing\Demuxer.cpp">
+    <ClCompile Include="source\core\muxing\Demuxer.cpp">
       <Filter>Source Files\Muxing</Filter>
     </ClCompile>
-    <ClCompile Include="source\muxing\Muxer.cpp">
+    <ClCompile Include="source\core\muxing\Muxer.cpp">
       <Filter>Source Files\Muxing</Filter>
     </ClCompile>
-    <ClCompile Include="source\media\Packet.cpp">
+    <ClCompile Include="source\core\media\Packet.cpp">
       <Filter>Source Files\Media</Filter>
     </ClCompile>
-    <ClCompile Include="source\enumerators\MediaType.cpp">
+    <ClCompile Include="source\core\enumerators\MediaType.cpp">
       <Filter>Source Files\Enumerators</Filter>
     </ClCompile>
-    <ClCompile Include="source\media\Frame.cpp">
+    <ClCompile Include="source\core\media\Frame.cpp">
       <Filter>Source Files\Media</Filter>
     </ClCompile>
-    <ClCompile Include="source\encoding\Encoder.cpp">
+    <ClCompile Include="source\core\encoding\Encoder.cpp">
       <Filter>Source Files\Encoding</Filter>
     </ClCompile>
-    <ClCompile Include="source\enumerators\CodecType.cpp">
+    <ClCompile Include="source\core\enumerators\CodecType.cpp">
       <Filter>Source Files\Enumerators</Filter>
     </ClCompile>
-    <ClCompile Include="source\encoding\Codec.cpp">
+    <ClCompile Include="source\core\encoding\Codec.cpp">
       <Filter>Source Files\Encoding</Filter>
     </ClCompile>
-    <ClCompile Include="source\enumerators\SampleFormat.cpp">
+    <ClCompile Include="source\core\enumerators\SampleFormat.cpp">
       <Filter>Source Files\Enumerators</Filter>
     </ClCompile>
-    <ClCompile Include="source\enumerators\PixelFormat.cpp">
+    <ClCompile Include="source\core\enumerators\PixelFormat.cpp">
       <Filter>Source Files\Enumerators</Filter>
     </ClCompile>
-    <ClCompile Include="source\encoding\CodecParameters.cpp">
+    <ClCompile Include="source\core\encoding\CodecParameters.cpp">
       <Filter>Source Files\Encoding</Filter>
     </ClCompile>
-    <ClCompile Include="source\utilities\Dictionary.cpp">
+    <ClCompile Include="source\core\utilities\Dictionary.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="source\utilities\RationalNumber.cpp">
+    <ClCompile Include="source\core\utilities\RationalNumber.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="source\encoding\Format.cpp">
+    <ClCompile Include="source\core\encoding\Format.cpp">
       <Filter>Source Files\Encoding</Filter>
     </ClCompile>
-    <ClCompile Include="source\media\File.cpp">
+    <ClCompile Include="source\core\media\File.cpp">
       <Filter>Source Files\Media</Filter>
     </ClCompile>
-    <ClCompile Include="source\utilities\Resampler.cpp">
+    <ClCompile Include="source\core\utilities\Resampler.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="source\utilities\AudioBuffer.cpp">
+    <ClCompile Include="source\core\utilities\AudioBuffer.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
   </ItemGroup>

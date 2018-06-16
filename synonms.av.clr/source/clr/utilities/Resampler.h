@@ -1,6 +1,6 @@
 #pragma once
 
-#include <utilities\Resampler.h>
+#include <core\utilities\Resampler.h>
 
 #include <clr\encoding\CodecWrapper.h>
 #include <clr\media\FrameWrapper.h>
@@ -25,10 +25,10 @@ namespace Synonms
 					void Initialise(Encoding::CodecWrapper^ inCodec, Encoding::CodecWrapper^ outCodec);
 
 				internal:
-					redav::utilities::Resampler* GetCoreResampler();
+					synonms::av::utilities::Resampler* GetCoreResampler();
 
 				private:
-					redav::utilities::Resampler* _resampler;
+					synonms::av::utilities::Resampler* _resampler;
 				};
 			}
 		}

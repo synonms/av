@@ -1,6 +1,6 @@
 #pragma once
 
-#include <media\File.h>
+#include <core\media\File.h>
 
 namespace Synonms
 {
@@ -13,12 +13,12 @@ namespace Synonms
 				public ref class FileWrapper
 				{
 				internal:
-					FileWrapper(redav::media::File* file);
+					FileWrapper(synonms::av::media::File* file);
 
-					redav::media::File* GetCoreFile();
+					synonms::av::media::File* GetCoreFile();
 
 				private:
-					redav::media::File* _file;
+					synonms::av::media::File* _file;
 				};
 			}
 		}

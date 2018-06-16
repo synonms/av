@@ -2,7 +2,7 @@
 
 using namespace Synonms::Av::Clr::Utilities;
 
-RationalNumber::RationalNumber(const redav::utilities::RationalNumber& rationalNumber)
+RationalNumber::RationalNumber(const synonms::av::utilities::RationalNumber& rationalNumber)
 	: _numerator(rationalNumber.GetNumerator())
 	, _denominator(rationalNumber.GetDenominator())
 {
@@ -14,7 +14,7 @@ RationalNumber::RationalNumber(int numerator, int denominator)
 {
 }
 
-redav::utilities::RationalNumber RationalNumber::GetCoreRationalNumber()
+synonms::av::utilities::RationalNumber RationalNumber::GetCoreRationalNumber()
 {
-	return redav::utilities::RationalNumber(_numerator, _denominator);
+	return synonms::av::utilities::RationalNumber(_numerator, _denominator);
 }

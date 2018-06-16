@@ -1,6 +1,6 @@
 #pragma once
 
-#include <media\Frame.h>
+#include <core\media\Frame.h>
 
 #include <clr\enumerators\MediaType.h>
 
@@ -18,13 +18,13 @@ namespace Synonms
 					Enumerators::MediaType GetMediaType();
 
 				internal:
-					FrameWrapper(redav::media::Frame* frame);
-					FrameWrapper(redav::media::Frame&& frame);
+					FrameWrapper(synonms::av::media::Frame* frame);
+					FrameWrapper(synonms::av::media::Frame&& frame);
 
-					redav::media::Frame* GetFrame();
+					synonms::av::media::Frame* GetFrame();
 
 				private:
-					redav::media::Frame* _frame;
+					synonms::av::media::Frame* _frame;
 				};
 			}
 		}
