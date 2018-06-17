@@ -13,6 +13,16 @@ namespace synonms
 			enum class CodecType : int
 			{
 				Unknown = 0,
+
+				// Video
+				Video_H263 = 4,
+				Video_MPEG4 = 12,
+				Video_RAW = 13,
+				Video_H264 = 27,
+				Video_VP8 = 139,
+				Video_VP9 = 167,
+
+				// Audio
 				PCM_Signed16BitLittleEndian = 65536,
 				PCM_Signed16BitBigEndian = 65537,		// Note: Not supported in WAVE format
 				PCM_Unsigned16BitLittleEndian = 65538,	// Note: Not supported in WAVE format

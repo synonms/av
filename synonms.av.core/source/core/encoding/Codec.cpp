@@ -76,6 +76,11 @@ int Codec::GetChannelCount() const
 	return implementation->codecContext->channels;
 }
 
+RationalNumber Codec::GetFrameRate() const
+{
+	return implementation->codecContext->framerate;
+}
+
 int Codec::GetFrameSize() const
 {
 	return implementation->codecContext->frame_size;
@@ -121,6 +126,11 @@ RationalNumber Codec::GetTimeBase() const
 	return { implementation->codecContext->time_base.num, implementation->codecContext->time_base.den };
 }
 
+int Codec::GetVideoPictureGroupSize() const
+{
+	return implementation->codecContext->gop_size;
+}
+
 int Codec::GetWidth() const
 {
 	return implementation->codecContext->width;
@@ -141,6 +151,12 @@ void Codec::CopyParameters(CodecParameters* parameters)
 	std::cout << "Codec: Copying parameters..." << std::endl;
 
 	if (avcodec_parameters_to_context(implementation->codecContext, parameters->GetAVCodecParameters()) < 0) throw std::exception("Failed to copy parameters to codec context");
+
+	// Some properties are not part of AVCodecParameters so shim them manually
+	if (parameters->GetMediaType() == MediaType::Video)
+	{
+		SetFrameRate(parameters->GetFrameRate());
+	}
 
 	std::cout << "Codec: Parameters copied" << std::endl;
 }
@@ -195,6 +211,12 @@ Codec& Codec::SetFlag(int flag)
 	return *this;
 }
 
+Codec& Codec::SetFrameRate(const RationalNumber& value)
+{
+	implementation->codecContext->framerate = value.GetAVRational();
+	return *this;
+}
+
 Codec& Codec::SetHeight(int value)
 {
 	implementation->codecContext->height = value;
@@ -228,6 +250,12 @@ Codec& Codec::SetSampleRate(int value)
 Codec& Codec::SetTimeBase(const RationalNumber& value)
 {
 	implementation->codecContext->time_base = value.GetAVRational();
+	return *this;
+}
+
+Codec& Codec::SetVideoPictureGroupSize(int value)
+{
+	implementation->codecContext->gop_size = value;
 	return *this;
 }
 

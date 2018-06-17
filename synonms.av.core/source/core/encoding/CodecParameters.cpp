@@ -23,6 +23,8 @@ public:
 	PixelFormat pixelFormat{ PixelFormat::Unknown };
 	SampleFormat sampleFormat{ SampleFormat::None };
 	RationalNumber timeBase{ 1, 24 };
+	RationalNumber frameRate{ 24, 1 };
+	int pictureGroupSize{ 10 };
 
 	void SetUp()
 	{
@@ -56,6 +58,7 @@ CodecParameters::CodecParameters(const CodecParameters& other)
 	SetChannelCount(other.GetChannelCount());
 	SetAudioChannelLayout(other.GetAudioChannelLayout());
 	SetCodecType(other.GetCodecType());
+	SetFrameRate(other.GetFrameRate());
 	SetHeight(other.GetHeight());
 	SetMediaType(other.GetMediaType());
 	SetPixelFormat(other.GetPixelFormat());
@@ -72,6 +75,7 @@ CodecParameters& CodecParameters::operator=(const CodecParameters& other)
 	SetChannelCount(other.GetChannelCount());
 	SetAudioChannelLayout(other.GetAudioChannelLayout());
 	SetCodecType(other.GetCodecType());
+	SetFrameRate(other.GetFrameRate());
 	SetHeight(other.GetHeight());
 	SetMediaType(other.GetMediaType());
 	SetPixelFormat(other.GetPixelFormat());
@@ -106,6 +110,11 @@ uint64_t CodecParameters::GetAudioChannelLayout() const
 CodecType CodecParameters::GetCodecType() const
 {
 	return CodecTypeMapper::FromFfmpeg(implementation->codecParameters->codec_id);
+}
+
+RationalNumber CodecParameters::GetFrameRate() const
+{
+	return implementation->frameRate;
 }
 
 int CodecParameters::GetHeight() const
@@ -143,6 +152,11 @@ RationalNumber CodecParameters::GetTimeBase() const
 	return implementation->timeBase;
 }
 
+int CodecParameters::GetVideoPictureGroupSize() const
+{
+	return implementation->pictureGroupSize;
+}
+
 int CodecParameters::GetWidth() const
 {
 	return implementation->codecParameters->width;
@@ -174,6 +188,12 @@ CodecParameters& CodecParameters::SetAudioChannelLayout(uint64_t value)
 CodecParameters& CodecParameters::SetCodecType(CodecType value)
 {
 	implementation->codecParameters->codec_id = CodecTypeMapper::ToFfmpeg(value);
+	return *this;
+}
+
+CodecParameters& CodecParameters::SetFrameRate(const RationalNumber& value)
+{
+	implementation->frameRate = value;
 	return *this;
 }
 
@@ -216,6 +236,12 @@ CodecParameters& CodecParameters::SetSampleRate(int value)
 CodecParameters& CodecParameters::SetTimeBase(const RationalNumber& value)
 {
 	implementation->timeBase = value;
+	return *this;
+}
+
+CodecParameters& CodecParameters::SetVideoPictureGroupSize(int value)
+{
+	implementation->pictureGroupSize = value;
 	return *this;
 }
 

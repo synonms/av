@@ -81,6 +81,7 @@ const Codec& Decoder::GetCodec() const
 CodecParameters Decoder::GetVideoParameters() const
 {
 	return CodecParameters()
+		.SetFrameRate(implementation->codec.GetFrameRate())
 		.SetWidth(implementation->codec.GetWidth())
 		.SetHeight(implementation->codec.GetHeight())
 		.SetSampleAspectRatio(implementation->codec.GetSampleAspectRatio())

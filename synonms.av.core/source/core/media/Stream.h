@@ -29,9 +29,10 @@ namespace synonms
 				bool IsValid() const;
 				void SetTimeBase(utilities::RationalNumber timeBase);
 
-				// Internal
+			// Internal
 			public:
-				AVStream * GetStream() const;
+				AVStream* GetAVStream() const;
+				void SetAVStream(AVStream* stream);
 
 			private:
 				class Implementation;

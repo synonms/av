@@ -11,6 +11,13 @@ CodecType CodecTypeMapper::FromFfmpeg(AVCodecID value)
 {
 	switch (value)
 	{
+	case AV_CODEC_ID_H263: return CodecType::Video_H263;
+	case AV_CODEC_ID_MPEG4: return CodecType::Video_MPEG4;
+	case AV_CODEC_ID_RAWVIDEO: return CodecType::Video_RAW;
+	case AV_CODEC_ID_H264: return CodecType::Video_H264;
+	case AV_CODEC_ID_VP8: return CodecType::Video_VP8;
+	case AV_CODEC_ID_VP9: return CodecType::Video_VP9;
+
 	case AV_CODEC_ID_PCM_S16LE: return CodecType::PCM_Signed16BitLittleEndian;
 	case AV_CODEC_ID_PCM_S16BE: return CodecType::PCM_Signed16BitBigEndian;
 	case AV_CODEC_ID_PCM_U16LE: return CodecType::PCM_Unsigned16BitLittleEndian;
@@ -45,6 +52,13 @@ AVCodecID CodecTypeMapper::ToFfmpeg(CodecType value)
 {
 	switch (value)
 	{
+	case CodecType::Video_H263: return AV_CODEC_ID_H263;
+	case CodecType::Video_MPEG4: return AV_CODEC_ID_MPEG4;
+	case CodecType::Video_RAW: return AV_CODEC_ID_RAWVIDEO;
+	case CodecType::Video_H264: return AV_CODEC_ID_H264;
+	case CodecType::Video_VP8: return AV_CODEC_ID_VP8;
+	case CodecType::Video_VP9: return AV_CODEC_ID_VP9;
+
 	case CodecType::PCM_Signed16BitLittleEndian: return AV_CODEC_ID_PCM_S16LE;
 	case CodecType::PCM_Signed16BitBigEndian: return AV_CODEC_ID_PCM_S16BE;
 	case CodecType::PCM_Unsigned16BitLittleEndian: return AV_CODEC_ID_PCM_U16LE;
@@ -79,6 +93,13 @@ std::string CodecTypeMapper::ToString(CodecType value)
 {
 	switch (value)
 	{
+	case CodecType::Video_H263: return "H.263";
+	case CodecType::Video_MPEG4: return "MPEG 4";
+	case CodecType::Video_RAW: return "Raw";
+	case CodecType::Video_H264: return "H.264";
+	case CodecType::Video_VP8: return "VP8";
+	case CodecType::Video_VP9: return "VP9";
+
 	case CodecType::PCM_Signed16BitLittleEndian: return "PCM - Signed 16bit Little Endian";
 	case CodecType::PCM_Signed16BitBigEndian: return "PCM - Signed 16bit Big Endian";
 	case CodecType::PCM_Unsigned16BitLittleEndian: return "PCM - Unsigned 16bit Little Endian";

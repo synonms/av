@@ -8,6 +8,8 @@ extern "C"
 
 #include <iostream>
 
+#include <core\media\Stream.h>
+
 using namespace synonms::av::encoding;
 using namespace synonms::av::enumerators;
 using namespace synonms::av::media;
@@ -34,7 +36,7 @@ public:
 
 		std::cout << "Demuxer: Stream info found" << std::endl;
 
-		if (formatContext->nb_streams != 1)
+		if (formatContext->nb_streams > 2)
 		{
 			std::cout << "Demuxer: WARNING - " << formatContext->nb_streams << " streams found" << std::endl;
 		}
@@ -74,6 +76,7 @@ public:
 			if (codecType != CodecType::Unknown)
 			{
 				CodecParameters codecParameters(videoStream->codecpar);
+				codecParameters.SetFrameRate(av_guess_frame_rate(formatContext, videoStream, nullptr));
 				videoDecoder.Initialise(CodecTypeMapper::FromFfmpeg(videoStream->codecpar->codec_id));
 				videoDecoder.Open(&codecParameters);
 

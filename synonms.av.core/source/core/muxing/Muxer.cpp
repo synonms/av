@@ -80,7 +80,7 @@ public:
 	{
 		std::cout << "Muxer: Initialising audio encoder..." << std::endl;
 
-		audioEncoder.Initialise(parameters ? CodecType::PCM_Signed16BitLittleEndian : parameters->GetCodecType());
+		audioEncoder.Initialise(parameters == nullptr ? CodecType::PCM_Signed16BitLittleEndian : parameters->GetCodecType());
 
 		audioEncoder.GetCodec()
 			.SetSampleRate(parameters == nullptr ? 44100 : parameters->GetSampleRate())
@@ -111,27 +111,30 @@ public:
 	{
 		std::cout << "Muxer: Initialising video encoder..." << std::endl;
 
-		videoStream.Initialise(format);
-
-		// TODO - Add video codecs
-		videoEncoder.Initialise(parameters ? CodecType::Unknown : parameters->GetCodecType());
+		videoEncoder.Initialise(parameters == nullptr ? CodecType::Video_RAW : parameters->GetCodecType());
 
 		videoEncoder.GetCodec()
 			.SetBitRate(parameters == nullptr ? 400000 : parameters->GetBitRate())
-//			.SetVideoGopSize(parameters == nullptr ? 12 : parameters->GetGopSize())
+			.SetVideoPictureGroupSize(parameters == nullptr ? 12 : parameters->GetVideoPictureGroupSize())
 			.SetHeight(parameters == nullptr ? 288 : parameters->GetHeight())
 			.SetWidth(parameters == nullptr ? 352 : parameters->GetWidth())
 			.SetSampleAspectRatio(parameters == nullptr ? RationalNumber(352 , 288) : parameters->GetSampleAspectRatio())
 			.SetPixelFormat(parameters == nullptr ? PixelFormat::AV_PIX_FMT_YUV420P : parameters->GetPixelFormat())
 			.SetTimeBase(parameters == nullptr ? 1 : parameters->GetTimeBase());
 
-		videoEncoder.Open(nullptr);
-
-		videoStream.CopyParameters(videoEncoder.GetCodec());
-
 		if (format.HasGlobalHeader()) videoEncoder.SetGlobalHeader();
 
+		videoEncoder.Open(nullptr);
+
+		std::cout << "Muxer: Video encoder opened, initialising stream..." << std::endl;
+
+		videoStream.Initialise(format);
 		videoStream.SetTimeBase(videoEncoder.GetCodec().GetTimeBase());
+		videoStream.CopyParameters(videoEncoder.GetCodec());
+
+//		std::cout << "Muxer: Stream initialised, initialising video buffer..." << std::endl;
+
+//		videoBuffer.Initialise(audioEncoder.GetCodec().GetSampleFormat(), audioEncoder.GetCodec().GetChannelCount());
 
 		std::cout << "Muxer: Video setup complete" << std::endl;
 	}
@@ -223,7 +226,7 @@ void Muxer::WriteBuffer()
 
 		implementation->audioEncoder.EncodeAudio(outputFrame, [=, &outputFrame](const Packet& packet)
 		{
-			if (implementation->WritePacket(outputFrame.GetTimeBase(), implementation->audioStream.GetStream(), packet.GetAVPacket()) < 0) throw std::exception("Muxer: Error writing audio packet");
+			if (implementation->WritePacket(outputFrame.GetTimeBase(), implementation->audioStream.GetAVStream(), packet.GetAVPacket()) < 0) throw std::exception("Muxer: Error writing audio packet");
 		});
 	}
 }

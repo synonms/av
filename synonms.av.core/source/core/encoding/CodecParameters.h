@@ -28,6 +28,7 @@ namespace synonms
 				int GetChannelCount() const;
 				uint64_t GetAudioChannelLayout() const;
 				enumerators::CodecType GetCodecType() const;
+				utilities::RationalNumber GetFrameRate() const;
 				int GetHeight() const;
 				enumerators::MediaType GetMediaType() const;
 				enumerators::PixelFormat GetPixelFormat() const;
@@ -35,12 +36,14 @@ namespace synonms
 				enumerators::SampleFormat GetSampleFormat() const;
 				int GetSampleRate() const;
 				utilities::RationalNumber GetTimeBase() const;
+				int GetVideoPictureGroupSize() const;
 				int GetWidth() const;
 				bool IsValid() const;
 				CodecParameters& SetBitRate(int64_t value);
 				CodecParameters& SetChannelCount(int value);
 				CodecParameters& SetAudioChannelLayout(uint64_t value);
 				CodecParameters& SetCodecType(enumerators::CodecType value);
+				CodecParameters& SetFrameRate(const utilities::RationalNumber& value);
 				CodecParameters& SetHeight(int value);
 				CodecParameters& SetMediaType(enumerators::MediaType value);
 				CodecParameters& SetPixelFormat(enumerators::PixelFormat value);
@@ -48,6 +51,7 @@ namespace synonms
 				CodecParameters& SetSampleFormat(enumerators::SampleFormat value);
 				CodecParameters& SetSampleRate(int value);
 				CodecParameters& SetTimeBase(const utilities::RationalNumber& value);
+				CodecParameters& SetVideoPictureGroupSize(int value);
 				CodecParameters& SetWidth(int value);
 
 			public: // Internal

@@ -54,7 +54,7 @@ void Stream::CopyParameters(const Codec& codec)
 	if (avcodec_parameters_from_context(implementation->stream->codecpar, codec.GetCodecContext()) < 0) throw std::exception("Stream error: Could not copy the codec parameters");
 }
 
-AVStream* Stream::GetStream() const
+AVStream* Stream::GetAVStream() const
 {
 	return implementation->stream;
 }
@@ -77,6 +77,11 @@ void Stream::Initialise(const Format& format)
 bool Stream::IsValid() const
 {
 	return implementation->stream != nullptr;
+}
+
+void Stream::SetAVStream(AVStream* stream)
+{
+	implementation->stream = stream;
 }
 
 void Stream::SetTimeBase(RationalNumber timeBase)
